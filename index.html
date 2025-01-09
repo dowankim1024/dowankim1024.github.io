@@ -33,25 +33,25 @@
   </head>
   <body>
     <!-- Header -->
-    <header>
+    <header class="header">
       <!-- 박스에 크게 의미가있는게 아니라 단순 스타일링 목적일때는 div사용 -->
-      <div>
-        <img src="images/fav.ico" alt="logo" />
+      <div class="header__logo">
+        <img class = "header__logo__img" src="images/fav.ico" alt="logo" />
         <!-- a태그 - 화면어디에서든 DowanKim 클릭하면 상단으로 이동 -->
         <!-- a태그 href에서는 다른페이지 연결, 이메일, 전화, 페이지 상 섹션, 특정 텍스트, 미디어, 외부 링크등 가능 -->
         <!-- target에서는 어디에다 링크를열건지 (현재탭_self or새탭_blank) -->
         <!-- href="#"를 사용, 즉 empty를 사용하면 현재 페이지 맨 위로 이동 -->
-        <h1><a href="#">DowanKim</a></h1>
+        <h1 class="header__logo__title"><a href="#">DowanKim</a></h1>
       </div>
       <nav>
-        <ul>
+        <ul class="header__menu">
           <!-- nav 안에 link들의 목록(ul) 이 있고 link는 a태그 사용해야함 -->
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#work">My work</a></li>
-          <li><a href="#testimonial">Testimonials</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a class="header__menu__item active" href="#home">Home</a></li>
+          <li><a class="header__menu__item" href="#about">About</a></li>
+          <li><a class="header__menu__item" href="#skills">Skills</a></li>
+          <li><a class="header__menu__item" href="#work">My work</a></li>
+          <li><a class="header__menu__item" href="#testimonial">Testimonials</a></li>
+          <li><a class="header__menu__item" href="#contact">Contact</a></li>
         </ul>
       </nav>
     </header>
