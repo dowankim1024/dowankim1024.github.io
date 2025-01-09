@@ -1,171 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible"content='IE=edge' />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- SEO -->
     <title>Dowan Kim&#39; Portfolio</title>
-    <meta name="description" content="Portfolio for Dowan Kim"/>
+    <meta name="description" content="Portfolio for Dowan Kim" />
     <meta name="autor" content="Dowan Kim" />
-    <link rel="shortcut icon" href="images/fav.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/fav.ico" type="image/x-icon" />
     <!-- OG (Open Graph Data) -->
-     <meta property="og:title" content="DK_Portfolio" />
-     <meta property="og:type" content="website" />
-     <meta property="og:url" content="배포후생성된URL"/>
-     <meta property="og:image" content="배포후에 생성된 이미지 URL"/>
-     <!-- Google Fonts -->
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap" rel="stylesheet">
-     <!-- Font Awesome -->
-     <script src="https://kit.fontawesome.com/a13d39dcb0.js" crossorigin="anonymous"></script>
-     <!-- CSS -->
-      <link rel="stylesheet" href="css/style.css">
-      <!-- Javascript / defer를 사용하여 HTML문서가 전부 PARSER 되고 다운로드받아서 실행되게 -> 성능향상-->
-       <script src="src/main.js" defer></script>
-</head>
-<body>
+    <meta property="og:title" content="DK_Portfolio" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="배포후생성된URL" />
+    <meta property="og:image" content="배포후에 생성된 이미지 URL" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/a13d39dcb0.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- Javascript / defer를 사용하여 HTML문서가 전부 PARSER 되고 다운로드받아서 실행되게 -> 성능향상-->
+    <script src="src/main.js" defer></script>
+  </head>
+  <body>
     <!-- Header -->
     <header>
-        <!-- 박스에 크게 의미가있는게 아니라 단순 스타일링 목적일때는 div사용 -->
-        <div>
-            <img src="images/fav.ico" alt="logo"/>
-            <!-- a태그 - 화면어디에서든 DowanKim 클릭하면 상단으로 이동 -->
-            <!-- a태그 href에서는 다른페이지 연결, 이메일, 전화, 페이지 상 섹션, 특정 텍스트, 미디어, 외부 링크등 가능 -->
-            <!-- target에서는 어디에다 링크를열건지 (현재탭_self or새탭_blank) -->
-            <!-- href="#"를 사용, 즉 empty를 사용하면 현재 페이지 맨 위로 이동 -->
-            <h1><a href="#">DowanKim</a></h1>
-        </div>
-        <nav>
-            <ul>
-                <!-- nav 안에 link들의 목록(ul) 이 있고 link는 a태그 사용해야함 -->
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#work">My work</a></li>
-                <li><a href="#testimonial">Testimonials</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
+      <!-- 박스에 크게 의미가있는게 아니라 단순 스타일링 목적일때는 div사용 -->
+      <div>
+        <img src="images/fav.ico" alt="logo" />
+        <!-- a태그 - 화면어디에서든 DowanKim 클릭하면 상단으로 이동 -->
+        <!-- a태그 href에서는 다른페이지 연결, 이메일, 전화, 페이지 상 섹션, 특정 텍스트, 미디어, 외부 링크등 가능 -->
+        <!-- target에서는 어디에다 링크를열건지 (현재탭_self or새탭_blank) -->
+        <!-- href="#"를 사용, 즉 empty를 사용하면 현재 페이지 맨 위로 이동 -->
+        <h1><a href="#">DowanKim</a></h1>
+      </div>
+      <nav>
+        <ul>
+          <!-- nav 안에 link들의 목록(ul) 이 있고 link는 a태그 사용해야함 -->
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#work">My work</a></li>
+          <li><a href="#testimonial">Testimonials</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
     </header>
     <!-- Main -->
     <main>
-        <!-- Home -->
-        <section id = "home">
-            <img src="images/bgremove.png" alt="Dowan Kims's profile">
-            <h2>Designer&#38;Developer&#44; Dowan Kim</h2>
-            <p>Front-end developer with design skills</p>
-            <a href="#contact">Contact Me</a>
-        </section>
-        <!-- About -->
-        <section id="about">
-            <h2>About me</h2>
-            <p>As a graduate of the Design and Technology major,
-                 I have the ability to design, develop, and plan.
-                  These three abilities were combined to improve each other's abilities and create new value for me.
-                </p>
-            <ul>
-                <li>
-                    <i class="fa-solid fa-code"></i>
-                    <p>Front-end</p>
-                    <p>HTML, CSS, JavaScript, TypeScript, React, Vue, Web APIs</p>
-                </li>
-                <li>
-                    <i class="fa-solid fa-pen-nib"></i>
-                    <p>Design</p>
-                    <p>Interactive, UI/UX, Graphic, 2D/3D Motion</p>
-                </li>
-                <li>
-                    <i class="fa-solid fa-list-check"></i>
-                    <p>Plannning</p>
-                    <p>Data analysis, IA, Wireframe, WBS</p>
-                </li>
-            </ul>
-            <ul>
-                <li>
-                    <img src="images/jobs/google.png" alt="pnu logo">
-                    <div>
-                        <p>PNU Design&#38;Technology</p>
-                        <p>2020 March - 2026 February</p>
-                    </div>
-                </li>
-                <li>
-                    <img src="images/jobs/samsung.png" alt="gyvers logo">
-                    <div>
-                        <p>Gyvers as Software Engineer, Designer</p>
-                        <p>2023 Sept - 2024 June</p>
-                    </div>
-                </li>
-            </ul>
-        </section>
-        <!-- Skills -->
-        <section id = "skills"></section>
-            <h2>My Skills</h2>
-            <p>Skills & Attributes</p>
-            <p>I use UI/UX design tools and various interactive design tools,
-             and as a front-end developer with design skills,
-              I shine in team projects. As a planner, 
-              I am also confident in data collection, 
-              analysis, and creation of solution models.
-            </p>
+      <!-- Home -->
+      <section id="home">
+        <img src="images/bgremove.png" alt="Dowan Kims's profile" />
+        <h2>Designer&#38;Developer&#44; Dowan Kim</h2>
+        <p>Front-end developer with design skills</p>
+        <a href="#contact">Contact Me</a>
+      </section>
+      <!-- About -->
+      <section id="about">
+        <h2>About me</h2>
+        <p>
+          As a graduate of the Design and Technology major, I have the ability
+          to design, develop, and plan. These three abilities were combined to
+          improve each other's abilities and create new value for me.
+        </p>
+        <ul>
+          <li>
+            <i class="fa-solid fa-code"></i>
+            <p>Front-end</p>
+            <p>HTML, CSS, JavaScript, TypeScript, React, Vue, Web APIs</p>
+          </li>
+          <li>
+            <i class="fa-solid fa-pen-nib"></i>
+            <p>Design</p>
+            <p>Interactive, UI/UX, Graphic, 2D/3D Motion</p>
+          </li>
+          <li>
+            <i class="fa-solid fa-list-check"></i>
+            <p>Plannning</p>
+            <p>Data analysis, IA, Wireframe, WBS</p>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <img src="images/jobs/google.png" alt="pnu logo" />
             <div>
-                <section>
-                    <h3>Front-end</h3>
-                    <ul>
-                        <li>
-                            <div><span>HTML</span><span>98%</span></div>
-                            <div><div style ="width: 98%"></div></div>
-                        </li>
-                        <li>
-                            <div><span>CSS</span><span>95%</span></div>
-                            <div><div style ="width: 95%"></div></div>
-                        </li>
-                        <li>
-                            <div><span>JavaScript</span><span>95%</span></div>
-                            <div><div style ="width: 95%"></div></div>
-                        </li>
-                        <li>
-                            <div><span>TypeScript</span><span>80%</span></div>
-                            <div><div style ="width: 80%"></div></div>
-                        </li>
-                        <li>
-                            <div><span>React</span><span>80%</span></div>
-                            <div><div style ="width: 80%"></div></div>
-                        </li>
-                        <li>
-                            <div><span>NodeJs</span><span>70%</span></div>
-                            <div><div style ="width: 70%"></div></div>
-                        </li>
-                    </ul>
-                </section>
-                <section>
-                    <h3>Design</h3>
-                    <ul>
-                        <li>Figma</li>
-                        <li>Processing</li>
-                        <li>Unity</li>
-                        <li>Arduino</li>
-                        <li>After Effect</li>
-                    </ul>
-                </section>
-                <section>
-                    <h3>Plan</h3>
-                    <ul>
-                        <li>Data analysis</li>
-                        <li>Statistics</li>
-                        <li>Communication</li>
-                    </ul>
-                </section>
+              <p>PNU Design&#38;Technology</p>
+              <p>2020 March - 2026 February</p>
             </div>
-        <!-- Work -->
-        <section id = "work"></section>
-        <!-- Testimonials -->
-        <section id = "testimonials"></section>
-        <!-- Arrow up -->
-        <aside></aside>
+          </li>
+          <li>
+            <img src="images/jobs/samsung.png" alt="gyvers logo" />
+            <div>
+              <p>Gyvers as Software Engineer, Designer</p>
+              <p>2023 Sept - 2024 June</p>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <!-- Skills -->
+      <section id="skills"></section>
+      <h2>My Skills</h2>
+      <p>Skills & Attributes</p>
+      <p>
+        I use UI/UX design tools and various interactive design tools, and as a
+        front-end developer with design skills, I shine in team projects. As a
+        planner, I am also confident in data collection, analysis, and creation
+        of solution models.
+      </p>
+      <div>
+        <section>
+          <h3>Front-end</h3>
+          <ul>
+            <li>
+              <div><span>HTML</span><span>98%</span></div>
+              <div><div style="width: 98%"></div></div>
+            </li>
+            <li>
+              <div><span>CSS</span><span>95%</span></div>
+              <div><div style="width: 95%"></div></div>
+            </li>
+            <li>
+              <div><span>JavaScript</span><span>95%</span></div>
+              <div><div style="width: 95%"></div></div>
+            </li>
+            <li>
+              <div><span>TypeScript</span><span>80%</span></div>
+              <div><div style="width: 80%"></div></div>
+            </li>
+            <li>
+              <div><span>React</span><span>80%</span></div>
+              <div><div style="width: 80%"></div></div>
+            </li>
+            <li>
+              <div><span>NodeJs</span><span>70%</span></div>
+              <div><div style="width: 70%"></div></div>
+            </li>
+          </ul>
+        </section>
+        <section>
+          <h3>Design</h3>
+          <ul>
+            <li>Figma</li>
+            <li>Processing</li>
+            <li>Unity</li>
+            <li>Arduino</li>
+            <li>After Effect</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Plan</h3>
+          <ul>
+            <li>Data analysis</li>
+            <li>Statistics</li>
+            <li>Communication</li>
+          </ul>
+        </section>
+      </div>
+      <!-- Work -->
+      <section id="work">
+        <h2>My work</h2>
+        <p>Projects</p>
+        <ul>
+          <li>
+            <button>All <span>8</span></button>
+          </li>
+          <li>
+            <button>Front-end <span>3</span></button>
+          </li>
+          <li>
+            <button>Design <span>3</span></button>
+          </li>
+          <li>
+            <button>Plan <span>2</span></button>
+          </li>
+        </ul>
+        <ul>
+            <li><a href="#" target="_blank">
+                <img src="images/projects/project1.webp" alt="project1">
+                <div>
+                    <h3>Project #1</h3>
+                    <p>Clone Coding with HTML, CSS</p>
+                </div>
+            </a></li>
+            <li><a href="#" target="_blank">
+                <img src="images/projects/project2.webp" alt="project2">
+                <div>
+                    <h3>Project #2</h3>
+                    <p>Clone Coding with HTML, CSS</p>
+                </div>
+            </a></li>
+            <li><a href="#" target="_blank">
+                <img src="images/projects/project3.webp" alt="project3">
+                <div>
+                    <h3>Project #3</h3>
+                    <p>Clone Coding with HTML, CSS</p>
+                </div>
+            </a></li>
+            <li><a href="#" target="_blank">
+                <img src="images/projects/project4.webp" alt="project4">
+                <div>
+                    <h3>Project #4</h3>
+                    <p>Clone Coding with HTML, CSS</p>
+                </div>
+            </a></li>
+            <li><a href="#" target="_blank">
+                <img src="images/projects/project5.webp" alt="project5">
+                <div>
+                    <h3>Project #5</h3>
+                    <p>Clone Coding with HTML, CSS</p>
+                </div>
+            </a></li>
+            <li><a href="#" target="_blank">
+                <img src="images/projects/project6.webp" alt="project6">
+                <div>
+                    <h3>Project #6</h3>
+                    <p>Clone Coding with HTML, CSS</p>
+                </div>
+            </a></li>
+            <li><a href="#" target="_blank">
+                <img src="images/projects/project7.webp" alt="project7">
+                <div>
+                    <h3>Project #7</h3>
+                    <p>Clone Coding with HTML, CSS</p>
+                </div>
+            </a></li>
+            <li><a href="#" target="_blank">
+                <img src="images/projects/project8.webp" alt="project8">
+                <div>
+                    <h3>Project #8</h3>
+                    <p>Clone Coding with HTML, CSS</p>
+                </div>
+            </a></li>
+        </ul>
+      </section>
+      <!-- Testimonials -->
+      <section id="testimonials"></section>
+      <!-- Arrow up -->
+      <aside></aside>
     </main>
     <!-- Footer -->
     <footer id="contact"></footer>
-</body>
+  </body>
 </html>
