@@ -15,7 +15,6 @@
     /* Background */
     --home-bg-gradient: linear-gradient(180deg, rgba(14,28,52,1) 0%, rgba(5,10,19,1) 100%);
     --home-bg-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' %3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1' gradientTransform='rotate(267,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%23050A13'/%3E%3Cstop offset='1' stop-color='%231B1E26'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='14' height='14' patternUnits='userSpaceOnUse'%3E%3Ccircle fill='%23013A3F' cx='7' cy='7' r='7'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23a)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23b)' fill-opacity='0.09'/%3E%3C/svg%3E");
-    
     /* Size */
     --size-max-width: 1200px;
     /* Divider */
@@ -145,7 +144,7 @@ button:focus{
 #home{
     position: relative;
     background-color: var(--color-primary);
-    background-image: var(--home-bg-svg);
+    background: var(--home-bg-svg);
     color: var(--color-text);
     padding: 5rem 1rem;
     padding-top: 7rem;

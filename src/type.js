@@ -20,4 +20,3 @@ new TypeIt('.home__title--strong',{
 .pause(1000)
 .delete()
 .go();
-
