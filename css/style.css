@@ -403,6 +403,7 @@ button:focus{
     border-radius: 100%;
     text-align: center;
     box-shadow: 0 3px 10px var(--color-accent);
+    transition: opacity 300ms ease-in;
 }
 
 /* Footer */
