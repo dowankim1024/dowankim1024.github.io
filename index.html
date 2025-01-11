@@ -26,12 +26,15 @@
       src="https://kit.fontawesome.com/a13d39dcb0.js"
       crossorigin="anonymous"
     ></script>
+    <!-- Typeit -->
+    <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css" />
     <!-- Javascript / defer를 사용하여 HTML문서가 전부 PARSER 되고 다운로드받아서 실행되게 -> 성능향상-->
     <script type="module" src="src/main.js" defer></script>
     <script type="module" src="src/projects.js" defer></script>
     <script type="module" src="src/active_menu.js" defer></script>
+    <script type="module" src="src/type.js" defer></script>
   </head>
   <body>
     <!-- Header -->
@@ -66,7 +69,7 @@
       <section id="home">
         <div class="home__container">
           <img class="home__avatar" src="images/bgremove.png" alt="Dowan Kims's profile" />
-        <h2 class="home__title"><strong class="home__title--strong">Designer&#38;Developer&#44;</strong><br /> Dowan Kim</h2>
+        <h2 class="home__title" aria-label="Designer&Developer Dowan Kim"><strong class="home__title--strong">Designer&#38;Developer&#44;</strong><br /> Dowan Kim</h2>
         <p class="home__description">Front-end developer with design skills</p>
         <a class="home__contact" href="#contact">Contact Me</a>
         </div>
