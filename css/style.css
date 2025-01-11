@@ -249,12 +249,15 @@ button:focus{
 
 .skills__design{
     padding: 1rem;
+    
+    
 
 }
 .skills__plan{
     padding: 1rem;
     background-color: var(--color-primary);
     filter: brightness(150%);
+    font-weight: 300;
 
 }
 .bar{
