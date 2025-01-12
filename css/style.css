@@ -541,8 +541,12 @@ button:focus{
         padding-bottom: 3rem;
     }
     .home__title{
-        font-size: 2.5rem;
+        font-size: 1rem;
         margin-bottom: 0.5rem;
+    }
+    .home__title--strong {
+        font-size: 1rem; /* 모바일 환경에서 글자 크기를 줄임 */
+        
     }
     .majors{
         flex-direction: column;
