@@ -55,7 +55,7 @@
           <li><a class="header__menu__item" href="#about">About</a></li>
           <li><a class="header__menu__item" href="#skills">Skills</a></li>
           <li><a class="header__menu__item" href="#work">My work</a></li>
-          <li><a class="header__menu__item" href="#testimonials">Testimonials</a></li>
+          <!-- <li><a class="header__menu__item" href="#testimonials">Testimonials</a></li> -->
           <li><a class="header__menu__item" href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -80,15 +80,16 @@
       <section id="about" class="section max-container">
         <h2 class="title">About me</h2>
         <p class="description">
-          As a graduate of the Design and Technology major, I have the ability
-          to design, develop, and plan. These three abilities were combined to
-          improve each other's abilities and create new value for me.
+          As a current student in the D&T major, I'm developing my abilities to design, develop, and plan.
+        </p>
+        <p class="description">
+          By integrating these skills, I continually enhance each one and create new value for myself.
         </p>
         <ul class="majors">
           <li class="major">
             <i class="fa-solid fa-code major__icon" ></i>
             <p class="major__title">Front-end</p>
-            <p>HTML, CSS, JavaScript, TypeScript, React, Vue, Web APIs</p>
+            <p>HTML, CSS, JavaScript, React, Web APIs</p>
           </li>
           <li class="major">
             <i class="fa-solid fa-pen-nib major__icon" ></i>
@@ -103,17 +104,24 @@
         </ul>
         <ul class="jobs">
           <li class="job">
-            <img src="images/jobs/google.png" alt="pnu logo" />
+            <img class="logo" src="images/jobs/pnu.png" alt="pnu logo" />
             <div>
               <p class="job__name">PNU Design&#38;Technology</p>
-              <p class="job__period">2020 March - 2026 February</p>
+              <p class="job__period">2020.03 - 2026.02</p>
             </div>
           </li>
           <li class="job">
-            <img src="images/jobs/samsung.png" alt="gyvers logo" />
+            <img class="logo" src="images/jobs/gyvers.png" alt="gyvers logo" />
             <div>
               <p class="job__name">Gyvers as Software Engineer, Designer</p>
-              <p class="job__period">2023 Sept - 2024 June</p>
+              <p class="job__period">2023.09 - 2024.06</p>
+            </div>
+          </li>
+          <li class="job">
+            <img class="logo" src="images/jobs/LS.png" alt="gyvers logo" />
+            <div>
+              <p class="job__name">LS Information Technology Co., Ltd. as front-end developer</p>
+              <p class="job__period">2025.01 - 2025.03</p>
             </div>
           </li>
         </ul>
@@ -125,7 +133,10 @@
       <p class="description">Skills & Attributes</p>
       <p>
         I use UI/UX design tools and various interactive design tools, and as a
-        front-end developer with design skills, I shine in team projects. As a
+        front-end developer with design skills, I shine in team projects.
+      </p>
+      <p>
+        As a
         planner, I am also confident in data collection, analysis, and creation
         of solution models.
       </p>
@@ -134,28 +145,20 @@
           <h3 class="skills__title">Front-end</h3>
           <ul>
             <li class="bar">
-              <div class="bar__metadata"><span>HTML</span><span>98%</span></div>
-              <div class="bar__bg"><div class= "bar__value" style="width: 98%"></div></div>
+              <div class="bar__metadata"><span>HTML</span><span>90%</span></div>
+              <div class="bar__bg"><div class= "bar__value" style="width: 90%"></div></div>
             </li>
             <li class="bar">
-              <div class="bar__metadata"><span>CSS</span><span>95%</span></div>
-              <div class="bar__bg"><div class= "bar__value" style="width: 95%"></div></div>
+              <div class="bar__metadata"><span>CSS</span><span>90%</span></div>
+              <div class="bar__bg"><div class= "bar__value" style="width: 90%"></div></div>
             </li>
             <li class="bar">
-              <div class="bar__metadata"><span>JavaScript</span><span>95%</span></div>
-              <div class="bar__bg"><div class= "bar__value" style="width: 95%"></div></div>
-            </li>
-            <li class="bar">
-              <div class="bar__metadata"><span>TypeScript</span><span>80%</span></div>
+              <div class="bar__metadata"><span>JavaScript</span><span>80%</span></div>
               <div class="bar__bg"><div class= "bar__value" style="width: 80%"></div></div>
-            </li>
+            </li> 
             <li class="bar">
-              <div class="bar__metadata"><span>React</span><span>80%</span></div>
-              <div class="bar__bg"><div class= "bar__value" style="width: 80%"></div></div>
-            </li>
-            <li class="bar">
-              <div class="bar__metadata"><span>NodeJs</span><span>70%</span></div>
-              <div class="bar__bg"><div class= "bar__value" style="width: 70%"></div></div>
+              <div class="bar__metadata"><span>React</span><span>50%</span></div>
+              <div class="bar__bg"><div class= "bar__value" style="width: 50%"></div></div>
             </li>
           </ul>
         </section>
@@ -187,80 +190,178 @@
         <p class="description">Projects</p>
         <ul class="categories">
           <li>
-            <button class="category category--selected" data-category="all">All <span class="category__count">8</span></button>
+            <button class="category category--selected" data-category="all">All <span class="category__count">22</span></button>
           </li>
           <li>
-            <button class="category" data-category="front-end">Front-end <span class="category__count">3</span></button>
+            <button class="category" data-category="front-end">Front-end <span class="category__count">5</span></button>
           </li>
           <li>
-            <button class="category" data-category="design">Design <span class="category__count">3</span></button>
+            <button class="category" data-category="design">Design <span class="category__count">15</span></button>
           </li>
           <li>
             <button class="category" data-category="plan">Plan <span class="category__count">2</span></button>
           </li>
         </ul>
         <ul class="projects">
-            <li class="project" data-type="front-end"><a href="#" target="_blank">
-                <img src="images/projects/project1.webp" alt="project1" class="project__img"/>
+            <li class="project" data-type="front-end"><a href="#" target="_self">
+                <img src="images/projects/pf.webp" alt="project1" class="project__img"/>
                 <div class="project__metadata">
-                    <h3 class="project__title">Project #1</h3>
-                    <p>Clone Coding with HTML, CSS</p>
+                    <h3 class="project__title">Portfolio Site</h3>
+                    <p>Dowan Kim's Portfolio Site</p>
                 </div>
             </a></li>
-            <li class="project" data-type="front-end"><a href="#" target="_blank">
-                <img src="images/projects/project2.webp" alt="project2" class="project__img"/>
+            <li class="project" data-type="front-end"><a href="https://cheerful-cascaron-6f7a7d.netlify.app/" target="_blank">
+                <img src="images/projects/todo.webp" alt="project2" class="project__img"/>
                 <div class="project__metadata">
-                    <h3 class="project__title">Project #2</h3>
-                    <p>Clone Coding with HTML, CSS</p>
+                    <h3 class="project__title">TODO-LIST</h3>
+                    <p>TODO-LIST using React</p>
                 </div>
             </a></li>
-            <li class="project" data-type="design"><a href="#" target="_blank">
-                <img src="images/projects/project3.webp" alt="project3" class="project__img"/>
+            <li class="project" data-type="front-end"><a href="https://yotubeclonecoding.netlify.app/" target="_blank">
+              <img src="images/projects/yt.webp" alt="project16" class="project__img"/>
+              <div class="project__metadata">
+                  <h3 class="project__title">Youtube clone coding</h3>
+                  <p>Youtube clone coding using React</p>
+              </div>
+          </a></li>
+          <li class="project" data-type="front-end"><a href="https://shoppy-dk.netlify.app/" target="_blank">
+            <img src="images/projects/shoppy.webp" alt="project17" class="project__img"/>
+            <div class="project__metadata">
+                <h3 class="project__title">Shoppig mall site</h3>
+                <p>Shopping mall site using React</p>
+            </div>
+          </a></li>
+          <li class="project" data-type="front-end"><a href="https://dowankim1024.github.io/carrot/" target="_blank">
+            <img src="images/projects/carrot.webp" alt="project18" class="project__img"/>
+            <div class="project__metadata">
+                <h3 class="project__title">Carrot game</h3>
+                <p>Carrot game!</p>
+            </div>
+          </a></li>
+          <li class="project" data-type="plan"><a href="https://github.com/dowankim1024/A-Pillar_Camera_SW_Project" target="_blank">
+            <img src="images/projects/apillar.webp" alt="project19" class="project__img"/>
+            <div class="project__metadata">
+                <h3 class="project__title">A-Pillar Camera SW Project</h3>
+                <p>Future mobility apillar camera image processing technology</p>
+            </div>
+          </a></li>
+          <li class="project" data-type="plan"><a href="https://blog.naver.com/kimdowan1004/223597811952" target="_blank">
+            <img src="images/projects/data.webp" alt="project22" class="project__img"/>
+            <div class="project__metadata">
+                <h3 class="project__title">Gap between elderly people’s economic activities and regional libraries</h3>
+                <p>Raising issues and presenting a solution model</p>
+            </div>
+          </a></li>
+          <li class="project" data-type="design"><a href="https://github.com/dowankim1024/HarmonyOfStructuredUnstructured" target="_blank">
+            <img src="images/projects/processing1.webp" alt="project20" class="project__img"/>
+            <div class="project__metadata">
+                <h3 class="project__title">Harmony of Structured Unstructured</h3>
+                <p>using Processing(please refer to ppt)</p>
+            </div>
+        </a></li>
+          <li class="project" data-type="design"><a href="https://blog.naver.com/kimdowan1004/223598508608" target="_blank">
+            <img src="images/projects/processing2.webp" alt="project21" class="project__img"/>
+            <div class="project__metadata">
+                <h3 class="project__title">Illusion</h3>
+                <p>using Processing</p>
+            </div>
+          </a></li>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/p/CP7LDbAFwKH/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+                <img src="images/projects/vodka.webp" alt="project3" class="project__img"/>
                 <div class="project__metadata">
-                    <h3 class="project__title">Project #3</h3>
-                    <p>Clone Coding with HTML, CSS</p>
+                    <h3 class="project__title">Absolute movie</h3>
+                    <p>Absolute movie using Maya</p>
                 </div>
             </a></li>
-            <li class="project" data-type="design"><a href="#" target="_blank">
-                <img src="images/projects/project4.webp" alt="project4" class="project__img"/>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/tv/CUanofkBd9s/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+                <img src="images/projects/unity1.webp" alt="project4" class="project__img"/>
                 <div class="project__metadata">
-                    <h3 class="project__title">Project #4</h3>
-                    <p>Clone Coding with HTML, CSS</p>
+                    <h3 class="project__title">VR contents#1</h3>
+                    <p>UNITY VR CONTENTS NO.1</p>
                 </div>
             </a></li>
-            <li class="project" data-type="front-end"><a href="#" target="_blank">
-                <img src="images/projects/project5.webp" alt="project5" class="project__img"/>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/tv/CU-ORQvp7tw/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+                <img src="images/projects/unity2.webp" alt="project5" class="project__img"/>
                 <div class="project__metadata">
-                    <h3 class="project__title">Project #5</h3>
-                    <p>Clone Coding with HTML, CSS</p>
+                    <h3 class="project__title">VR contents#2</h3>
+                    <p>UNITY VR CONTENTS_The Desert Prince</p>
                 </div>
             </a></li>
-            <li class="project" data-type="design"><a href="#" target="_blank">
-                <img src="images/projects/project6.webp" alt="project6" class="project__img"/>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/tv/CVeW3gDBHqb/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+                <img src="images/projects/Mayapj.webp" alt="project6" class="project__img"/>
                 <div class="project__metadata">
-                    <h3 class="project__title">Project #6</h3>
-                    <p>Clone Coding with HTML, CSS</p>
+                    <h3 class="project__title">Inside movie</h3>
+                    <p>Inside movie using Maya</p>
                 </div>
             </a></li>
-            <li class="project" data-type="plan"><a href="#" target="_blank">
-                <img src="images/projects/project7.webp" alt="project7" class="project__img"/>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/tv/CVno2wcB-EB/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+                <img src="images/projects/unity3.webp" alt="project7" class="project__img"/>
                 <div class="project__metadata">
-                    <h3 class="project__title">Project #7</h3>
-                    <p>Clone Coding with HTML, CSS</p>
+                    <h3 class="project__title">VR contentes#3</h3>
+                    <p>UNITY VR CONTENTS_HOTDOG</p>
                 </div>
             </a></li>
-            <li class="project" data-type="plan"><a href="#" target="_blank">
-                <img src="images/projects/project8.webp" alt="project8" class="project__img"/>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/tv/CWOPxqPFzdk/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+                <img src="images/projects/unity4.webp" alt="project8" class="project__img"/>
                 <div class="project__metadata">
-                    <h3 class="project__title">Project #8</h3>
-                    <p>Clone Coding with HTML, CSS</p>
+                    <h3 class="project__title">VR contentes#4</h3>
+                    <p>UNITY VR CONTENTS_TUMP RALLY</p>
                 </div>
+            </a></li>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/tv/CXvg7LHFC9c/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+              <img src="images/projects/unity5.webp" alt="project9" class="project__img"/>
+              <div class="project__metadata">
+                  <h3 class="project__title">VR contentes#5</h3>
+                  <p>UNITY VR CONTENTS_Black Lives Matter</p>
+              </div>
+            </a></li>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/tv/CXvhbHslRyH/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+              <img src="images/projects/mayaclock.webp" alt="project10" class="project__img"/>
+              <div class="project__metadata">
+                  <h3 class="project__title">Clock movie</h3>
+                  <p>MAYA CLOCK ANIMATION(PLAYBLAST)</p>
+              </div>
+            </a></li>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/p/Cx8E8r3Lyzq/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+              <img src="images/projects/blender.webp" alt="project11" class="project__img"/>
+              <div class="project__metadata">
+                  <h3 class="project__title">3D Poster</h3>
+                  <p>3D poster using Blender</p>
+              </div>
+            </a></li>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/p/Cx8lLs_yr_4/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+              <img src="images/projects/blender2.webp" alt="project12" class="project__img"/>
+              <div class="project__metadata">
+                  <h3 class="project__title">3D Material</h3>
+                  <p>3D Material using Blender</p>
+              </div>
+            </a></li>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/p/CyJBlporwoo/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+              <img src="images/projects/poca.webp" alt="project13" class="project__img"/>
+              <div class="project__metadata">
+                  <h3 class="project__title">POCARI SWEAT</h3>
+                  <p>POCARI SWEAT using Blender</p>
+              </div>
+            </a></li>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/reel/CyLSwuCR9GN/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+              <img src="images/projects/ip.webp" alt="project14" class="project__img"/>
+              <div class="project__metadata">
+                  <h3 class="project__title">IPHONE 3D GRAPHIC</h3>
+                  <p>IPHONE 3D GRAPHIC using Blender</p>
+              </div>
+            </a></li>
+            <li class="project" data-type="design"><a href="https://www.instagram.com/reel/CyTKqGHR9cU/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank">
+              <img src="images/projects/3d.webp" alt="project15" class="project__img"/>
+              <div class="project__metadata">
+                  <h3 class="project__title">3D GRAPHIC</h3>
+                  <p>3D GRAPHIC using Blender</p>
+              </div>
             </a></li>
         </ul>
         </div>
       </section>
       <!-- Testimonials -->
-      <section id="testimonials" class="section max-container">
+      <!-- <section id="testimonials" class="section max-container">
         <h2 class="title">Testimonials</h2>
         <p class="description">See what they say about me</p>
         <ul class="testimonials">
@@ -292,7 +393,7 @@
                 </div>
             </li>
         </ul>
-      </section>
+      </section> -->
       <!-- Arrow up -->
       <aside>
         <a class="arrow-up" href="#home" title="back to top">
