@@ -386,6 +386,8 @@ button:focus{
     transform: scale(0.96) translateY(20px);
 }
 .project{
+    display: flex;
+    justify-content: center;
     position: relative;
     border-radius: 8px;
     overflow: hidden;
@@ -395,6 +397,7 @@ button:focus{
     width: 300px;      /* 원하는 너비 설정 */
     height: 200px;     /* 원하는 높이 설정 */
     object-fit: cover; /* 이미지가 영역을 꽉 채우게 함 (비율 유지, 넘치는 부분은 잘림) */
+    object-position: center;
 }
 
 .project__metadata{
