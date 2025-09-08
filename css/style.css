@@ -107,7 +107,7 @@ button:focus{
     width:36px;
     height: 36px;
     object-fit: cover;
-    object-position: top;
+    object-position: top; /* Ensure top positioning */
     border-radius: 100%;
     border: 1px solid var(--color-accent);
 }
@@ -174,7 +174,7 @@ button:focus{
     width: 250px;
     height: 250px;
     object-fit: cover;
-    object-position: top;
+    object-position: top; /* Ensure top positioning */
     border-radius: 100%;
     border: 3px solid var(--color-accent);
 }
