@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Home.module.css'
+import { socialLinks } from './Home.constants'
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -50,36 +51,18 @@ export default function Home() {
           </h2>
           <p className={styles.description}>Front-end developer with design skills</p>
           <ul className={styles.links}>
-            <li>
-              <Link
-                className={styles.link}
-                href="https://github.com/dowankim1024"
-                target="_blank"
-                title="my github link"
-              >
-                <i className="fa-brands fa-github"></i>
-              </Link>
-            </li>
-            <li>
-              <Link
-                className={styles.link}
-                href="https://blog.naver.com/kimdowan1004"
-                target="_blank"
-                title="my blog link"
-              >
-                <i className="fa-solid fa-blog"></i>
-              </Link>
-            </li>
-            <li>
-              <Link
-                className={styles.link}
-                href="https://www.instagram.com/dowan.kim_developer/"
-                target="_blank"
-                title="my instagram link"
-              >
-                <i className="fa-brands fa-instagram"></i>
-              </Link>
-            </li>
+            {socialLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  className={styles.link}
+                  href={link.href}
+                  target="_blank"
+                  title={link.title}
+                >
+                  <i className={link.iconClass}></i>
+                </Link>
+              </li>
+            ))}
           </ul>
           <Link
             className={styles.contact}

@@ -4,11 +4,12 @@ import { useEffect, useState, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Header.module.css'
+import { NAV_SECTIONS, NavSection } from './Header.constants'
 
 export default function Header() {
   const [isDark, setIsDark] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
+  const [activeSection, setActiveSection] = useState<NavSection>('home')
   const headerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function Header() {
   }, [])
 
   useEffect(() => {
-    const sectionIds = ['home', 'about', 'career', 'work', 'contact']
+    const sectionIds: NavSection[] = [...NAV_SECTIONS]
     const sections = sectionIds.map(id => document.getElementById(id))
     const visibleSections = sectionIds.map(() => false)
 
@@ -41,7 +42,11 @@ export default function Header() {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       let selectLastOne = false
       entries.forEach((entry) => {
-        const index = sectionIds.indexOf(entry.target.id)
+        const targetId = entry.target.id as NavSection
+        const index = sectionIds.indexOf(targetId)
+        if (index < 0) {
+          return
+        }
         visibleSections[index] = entry.isIntersecting
         selectLastOne = index === sectionIds.length - 1 && 
           entry.isIntersecting && 
@@ -108,7 +113,7 @@ export default function Header() {
       </div>
       <nav className={styles.nav}>
         <ul className={styles.menu}>
-          {['home', 'about', 'career', 'work', 'contact'].map((section) => (
+          {NAV_SECTIONS.map((section) => (
             <li key={section}>
               <Link
                 href={`#${section}`}
@@ -133,7 +138,7 @@ export default function Header() {
       {isMenuOpen && (
         <nav className={styles.mobileNav}>
           <ul className={styles.mobileMenu}>
-            {['home', 'about', 'career', 'work', 'contact'].map((section) => (
+            {NAV_SECTIONS.map((section) => (
               <li key={section}>
                 <Link
                   href={`#${section}`}
