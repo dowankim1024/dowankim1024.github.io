@@ -1,0 +1,46 @@
+.section {
+  position: relative;
+  background-color: #1b1e26;
+  color: #ffffff;
+  padding: 4rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin: 1rem 0;
+}
+
+.email {
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  font-size: 2rem;
+  list-style: none;
+}
+
+.link {
+  transition: color 250ms ease-in;
+  color: #ffffff;
+}
+
+.link:hover {
+  color: #03e8f9;
+}
+
+.copyright {
+  margin-top: 1rem;
+}
+
