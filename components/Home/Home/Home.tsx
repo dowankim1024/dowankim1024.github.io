@@ -37,8 +37,9 @@ export default function Home() {
           className={styles.avatar}
           src="/images/projects/prof.jpeg"
           alt="Dowan Kim's profile"
-          width={250}
-          height={250}
+          width={400}
+          height={500}
+          style={{ width: 'auto', height: 'auto' }}
         />
         <div className={styles.content}>
           <h2 className={styles.title} aria-label="Designer&Developer Dowan Kim">
@@ -48,6 +49,38 @@ export default function Home() {
             <span>Dowan Kim</span>
           </h2>
           <p className={styles.description}>Front-end developer with design skills</p>
+          <ul className={styles.links}>
+            <li>
+              <Link
+                className={styles.link}
+                href="https://github.com/dowankim1024"
+                target="_blank"
+                title="my github link"
+              >
+                <i className="fa-brands fa-github"></i>
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={styles.link}
+                href="https://blog.naver.com/kimdowan1004"
+                target="_blank"
+                title="my blog link"
+              >
+                <i className="fa-solid fa-blog"></i>
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={styles.link}
+                href="https://www.instagram.com/dowan.kim_developer/"
+                target="_blank"
+                title="my instagram link"
+              >
+                <i className="fa-brands fa-instagram"></i>
+              </Link>
+            </li>
+          </ul>
           <Link
             className={styles.contact}
             href="#contact"

@@ -29,7 +29,7 @@ export default function Header() {
   }, [])
 
   useEffect(() => {
-    const sectionIds = ['home', 'about', 'skills', 'work', 'contact']
+    const sectionIds = ['home', 'about', 'career', 'work', 'contact']
     const sections = sectionIds.map(id => document.getElementById(id))
     const visibleSections = sectionIds.map(() => false)
 
@@ -108,7 +108,7 @@ export default function Header() {
       </div>
       <nav className={styles.nav}>
         <ul className={styles.menu}>
-          {['home', 'about', 'skills', 'work', 'contact'].map((section) => (
+          {['home', 'about', 'career', 'work', 'contact'].map((section) => (
             <li key={section}>
               <Link
                 href={`#${section}`}
@@ -133,7 +133,7 @@ export default function Header() {
       {isMenuOpen && (
         <nav className={styles.mobileNav}>
           <ul className={styles.mobileMenu}>
-            {['home', 'about', 'skills', 'work', 'contact'].map((section) => (
+            {['home', 'about', 'career', 'work', 'contact'].map((section) => (
               <li key={section}>
                 <Link
                   href={`#${section}`}
