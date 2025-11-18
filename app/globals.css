@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply m-0 text-text bg-primary;
+    font-family: var(--font-noto-sans), 'Noto Sans', sans-serif;
+  }
+
+  h1, h2, h3, p, ul {
+    @apply m-0;
+  }
+
+  ul {
+    @apply list-none p-0;
+  }
+
+  a {
+    @apply no-underline text-text;
+  }
+
+  button {
+    @apply bg-transparent outline-none border-0;
+  }
+
+  button:focus {
+    @apply outline outline-1 outline-transparent;
+  }
+}
