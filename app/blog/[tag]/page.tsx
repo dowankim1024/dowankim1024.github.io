@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getProjectByTag, getPostsByTag, getAllTags } from '@/lib/blog'
+import { getProjectByTag, getPostsByTag } from '@/lib/blog'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import styles from './page.module.css'
@@ -8,19 +8,6 @@ import styles from './page.module.css'
 interface PageProps {
   params: {
     tag: string
-  }
-}
-
-// 정적 사이트 생성을 위한 경로 생성
-export async function generateStaticParams() {
-  try {
-    const tags = await getAllTags()
-    return tags.map((tag) => ({
-      tag: encodeURIComponent(tag),
-    }))
-  } catch (error) {
-    console.error('Failed to generate static params for tag page:', error)
-    return []
   }
 }
 

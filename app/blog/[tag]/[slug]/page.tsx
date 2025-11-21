@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getPostBySlug, getPublishedPosts } from '@/lib/blog'
+import { getPostBySlug } from '@/lib/blog'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
@@ -9,40 +9,6 @@ interface PageProps {
   params: {
     tag: string
     slug: string
-  }
-}
-
-// 정적 사이트 생성을 위한 경로 생성
-export async function generateStaticParams() {
-  try {
-    const posts = await getPublishedPosts()
-    const params: { tag: string; slug: string }[] = []
-    
-    for (const post of posts) {
-      const slug = post.slug || post.id || ''
-      if (!slug) continue
-      
-      // 각 태그마다 경로 생성
-      if (post.tags && post.tags.length > 0) {
-        for (const tag of post.tags) {
-          params.push({
-            tag: encodeURIComponent(tag),
-            slug: encodeURIComponent(slug),
-          })
-        }
-      } else {
-        // 태그가 없으면 빈 태그로 처리
-        params.push({
-          tag: '',
-          slug: encodeURIComponent(slug),
-        })
-      }
-    }
-    
-    return params
-  } catch (error) {
-    console.error('Failed to generate static params:', error)
-    return []
   }
 }
 
