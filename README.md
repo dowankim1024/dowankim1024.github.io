@@ -5,6 +5,7 @@
 ## 📋 목차
 
 - [프로젝트 개요](#프로젝트-개요)
+- [주요 변경 사항](#주요-변경-사항)
 - [기술 스택](#기술-스택)
 - [주요 기능](#주요-기능)
 - [프로젝트 구조](#프로젝트-구조)
@@ -28,7 +29,37 @@
 - **프로젝트별 블로그**: 각 프로젝트(태그)별로 트러블슈팅 로그를 작성하고 관리할 수 있는 블로그 시스템
 - **관리자 기능**: Firebase Authentication을 통한 인증된 관리자만 글 작성/수정/삭제 가능
 - **마크다운 지원**: 블로그 글 작성 시 마크다운 에디터와 이미지 업로드 기능 제공
-- **정적 사이트 생성**: Next.js의 Static Export 기능을 활용하여 GitHub Pages에 배포
+- **동적 렌더링**: Next.js 서버 사이드 렌더링을 통해 실시간으로 Firebase 데이터를 가져와 표시
+- **Vercel 배포**: Vercel 플랫폼을 통해 자동 배포 및 서버 사이드 렌더링 지원
+
+## 🔄 주요 변경 사항
+
+### 2024년 업데이트: 정적 사이트에서 동적 렌더링으로 전환
+
+#### 1. 배포 플랫폼 변경
+- **이전**: GitHub Pages (정적 사이트)
+- **현재**: Vercel (서버 사이드 렌더링)
+
+#### 2. 렌더링 방식 변경
+- **이전**: 정적 사이트 생성 (SSG) - 빌드 시점에 모든 페이지 생성
+- **현재**: 서버 사이드 렌더링 (SSR) - 요청 시점에 동적으로 렌더링
+
+#### 3. 기술적 변경
+- `next.config.js`에서 `output: 'export'` 제거
+- 모든 동적 라우트에서 `generateStaticParams()` 제거
+- 모든 페이지가 런타임에 동적으로 렌더링됨
+
+#### 4. 기능 개선
+- **마크다운 링크 새 창 열기**: 프로젝트 설명과 블로그 글 내의 모든 링크가 새 창에서 열리도록 설정
+- **프로젝트 설명 첫 줄 표시**: 프로젝트 목록에서 설명의 첫 번째 줄만 표시
+- **동적 라우트 즉시 반영**: 새로운 블로그 글이 재배포 없이 즉시 반영됨
+
+#### 5. 장점
+- ✅ 빌드 타임에 모든 경로를 생성할 필요 없음
+- ✅ 새로운 콘텐츠가 즉시 반영됨
+- ✅ 동적 라우트가 런타임에 자동으로 처리됨
+- ✅ Firebase 데이터를 실시간으로 가져옴
+- ✅ 자동 스케일링 지원 (Vercel)
 
 ## 🛠 기술 스택
 
@@ -52,8 +83,8 @@
 - **react-syntax-highlighter** - 코드 하이라이팅
 
 ### 배포
-- **GitHub Pages** - 정적 사이트 호스팅
-- **GitHub Actions** - CI/CD 파이프라인
+- **Vercel** - 서버 사이드 렌더링 지원 플랫폼
+- **자동 배포** - Git 푸시 시 자동으로 빌드 및 배포
 
 ## ✨ 주요 기능
 
@@ -69,6 +100,7 @@
 - **프로젝트 페이지**: 각 프로젝트의 소개글과 해당 프로젝트의 블로그 글 목록
 - **블로그 글 상세**: 마크다운으로 작성된 블로그 글 상세 보기
 - **한글 URL 지원**: 한글 제목을 URL-safe하게 변환하여 사용
+- **마크다운 링크 새 창 열기**: 프로젝트 설명과 블로그 글 내의 모든 링크가 새 창에서 열림
 
 ### 3. 관리자 기능
 - **로그인/로그아웃**: Firebase Authentication을 통한 인증
@@ -116,8 +148,9 @@ dowankim1024.github.io/
 ├── public/                       # 정적 파일
 │   └── images/                   # 이미지 파일
 ├── .github/workflows/            # GitHub Actions 워크플로우
-│   └── deploy.yml                # 배포 자동화 스크립트
+│   └── deploy.yml                # 배포 자동화 스크립트 (현재 미사용)
 ├── next.config.js                # Next.js 설정
+├── vercel.json                   # Vercel 배포 설정
 ├── tailwind.config.js            # Tailwind CSS 설정
 ├── tsconfig.json                 # TypeScript 설정
 └── package.json                  # 프로젝트 의존성
@@ -171,7 +204,16 @@ npm run dev
 npm run build
 ```
 
-빌드된 정적 파일은 `out/` 디렉토리에 생성됩니다.
+빌드는 `.next/` 디렉토리에 생성되며, Vercel에 배포할 때 자동으로 서버에서 실행됩니다.
+
+### 로컬 프로덕션 서버 실행
+
+```bash
+npm run build
+npm run start
+```
+
+로컬에서 프로덕션 빌드를 테스트할 수 있습니다.
 
 ## 🔧 Firebase 설정
 
@@ -201,71 +243,63 @@ npm run build
 
 ## 📦 배포 방법
 
-### GitHub Pages 배포
+### Vercel 배포
 
-이 프로젝트는 GitHub Actions를 통해 자동으로 배포됩니다.
+이 프로젝트는 Vercel을 통해 배포됩니다. Vercel은 Next.js의 서버 사이드 렌더링을 완벽하게 지원합니다.
 
-#### 1. GitHub 저장소 설정
+#### 1. Vercel 프로젝트 설정
 
-1. GitHub 저장소 생성
-2. Settings → Pages → Source를 "GitHub Actions"로 설정
+1. [Vercel](https://vercel.com)에 로그인
+2. "Add New Project" 클릭
+3. GitHub 저장소 연결
+4. 프로젝트 설정:
+   - **Framework Preset**: Next.js
+   - **Root Directory**: `./` (루트 디렉토리)
+   - **Build Command**: `npm run build` (기본값)
+   - **Output Directory**: `.next` (자동 감지)
 
-#### 2. 자동 배포
+#### 2. 환경 변수 설정
+
+Vercel 프로젝트 설정에서 다음 환경 변수를 추가합니다:
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```
+
+설정 위치: **Settings → Environment Variables**
+
+#### 3. 자동 배포
 
 `main` 브랜치에 푸시하면 자동으로 빌드 및 배포가 진행됩니다.
 
-워크플로우 파일: `.github/workflows/deploy.yml`
+- 모든 푸시마다 프리뷰 배포 생성
+- `main` 브랜치 푸시 시 프로덕션 배포
 
-```yaml
-name: Deploy Next.js to GitHub Pages
+#### 4. vercel.json 설정
 
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+프로젝트 루트의 `vercel.json` 파일로 배포 설정을 관리합니다:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - name: Build site
-        run: npm run build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
-
-  deploy:
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+```json
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["icn1"]
+}
 ```
+
+#### 주요 변경 사항 (GitHub Pages → Vercel)
+
+- **렌더링 방식**: 정적 사이트 생성(SSG)에서 서버 사이드 렌더링(SSR)으로 전환
+- **동적 라우트**: 빌드 타임이 아닌 런타임에 동적으로 렌더링
+- **Firebase 통합**: 런타임에 Firebase에서 실시간으로 데이터 가져오기
+- **자동 스케일링**: 트래픽에 따라 자동으로 서버 리소스 확장
 
 ## 📖 주요 기능 상세 설명
 
@@ -411,20 +445,14 @@ export default async function BlogPage() {
 **주요 기능:**
 - 프로젝트 소개글 (마크다운 지원)
 - 해당 태그의 블로그 글 목록
-- 정적 사이트 생성을 위한 `generateStaticParams()` 구현
+- 동적 렌더링: 요청 시점에 Firebase에서 데이터를 가져와 렌더링
+- 마크다운 링크가 새 창에서 열림
 
 **코드 구조:**
 ```typescript
-// 정적 사이트 생성을 위한 경로 생성
-export async function generateStaticParams() {
-  try {
-    const tags = await getAllTags()
-    return tags.map((tag) => ({
-      tag: encodeURIComponent(tag),
-    }))
-  } catch (error) {
-    console.error('Failed to generate static params for tag page:', error)
-    return []
+interface PageProps {
+  params: {
+    tag: string
   }
 }
 
@@ -433,23 +461,45 @@ export default async function TagPage({ params }: PageProps) {
   const project = await getProjectByTag(decodedTag)
   const posts = await getPostsByTag(decodedTag)
 
+  if (posts.length === 0) {
+    notFound()
+  }
+
   return (
     <section className={styles.section}>
-      {/* 프로젝트 소개글 */}
-      {project && project.description && (
-        <div className={styles.description}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {project.description}
-          </ReactMarkdown>
+      <Header />
+      <div className={styles.container}>
+        <h1 className={styles.title}>{decodedTag}</h1>
+        
+        {/* 프로젝트 소개글 (링크는 새 창에서 열림) */}
+        {project && project.description && (
+          <div className={styles.description}>
+            <ReactMarkdown 
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ ...props }) => (
+                  <a {...props} target="_blank" rel="noopener noreferrer" />
+                ),
+              }}
+            >
+              {project.description}
+            </ReactMarkdown>
+          </div>
+        )}
+        
+        {/* 블로그 글 목록 */}
+        <div className={styles.posts}>
+          {posts.map((post) => (
+            <Link 
+              key={post.id} 
+              href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(post.slug || post.id || '')}`}
+              className={styles.postCard}
+            >
+              <h2 className={styles.postTitle}>{post.title}</h2>
+              {/* ... */}
+            </Link>
+          ))}
         </div>
-      )}
-      {/* 블로그 글 목록 */}
-      <div className={styles.posts}>
-        {posts.map((post) => (
-          <Link href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(post.slug || post.id || '')}`}>
-            {/* ... */}
-          </Link>
-        ))}
       </div>
     </section>
   )
@@ -464,6 +514,24 @@ export default async function TagPage({ params }: PageProps) {
 - 마크다운 렌더링 (GitHub Flavored Markdown 지원)
 - 코드 하이라이팅
 - HTML 태그 지원
+- 마크다운 내 링크가 새 창에서 열림
+
+**코드 구조:**
+```typescript
+<div className={styles.content}>
+  <ReactMarkdown
+    rehypePlugins={[rehypeRaw]}
+    remarkPlugins={[remarkGfm]}
+    components={{
+      a: ({ ...props }) => (
+        <a {...props} target="_blank" rel="noopener noreferrer" />
+      ),
+    }}
+  >
+    {post.content}
+  </ReactMarkdown>
+</div>
+```
 
 ### 3. 관리자 기능
 
@@ -787,25 +855,24 @@ service firebase.storage {
 
 ## 🐛 트러블슈팅
 
-### 1. 정적 사이트 생성 시 동적 라우트 문제
+### 1. 정적 사이트에서 동적 페이지로 전환
 
-**문제**: `output: 'export'` 설정에서 동적 라우트(`[slug]`, `[tag]`)를 사용할 때 `generateStaticParams()` 함수가 필요합니다.
+**변경 사항**: 프로젝트가 GitHub Pages 정적 배포에서 Vercel 서버 사이드 렌더링으로 전환되었습니다.
 
-**해결**: 각 동적 라우트 페이지에 `generateStaticParams()` 함수를 추가하여 빌드 시점에 모든 경로를 생성합니다.
+**주요 변경:**
+- `next.config.js`에서 `output: 'export'` 제거
+- 모든 동적 라우트에서 `generateStaticParams()` 제거
+- 모든 페이지가 런타임에 동적으로 렌더링됨
+- Firebase 데이터를 빌드 타임이 아닌 요청 시점에 가져옴
 
-```typescript
-export async function generateStaticParams() {
-  try {
-    const posts = await getPublishedPosts()
-    return posts.map((post) => ({
-      tag: encodeURIComponent(post.tags[0] || ''),
-      slug: encodeURIComponent(post.slug || post.id || ''),
-    }))
-  } catch (error) {
-    return []
-  }
-}
-```
+**장점:**
+- 새로운 블로그 글이 즉시 반영됨 (재배포 불필요)
+- 빌드 타임에 모든 경로를 생성할 필요 없음
+- 동적 라우트가 런타임에 자동으로 처리됨
+
+**주의사항:**
+- Vercel 환경 변수 설정 필수
+- Firebase 환경 변수가 Vercel 프로젝트 설정에 추가되어 있어야 함
 
 ### 2. 한글 URL 인코딩 문제
 
@@ -831,28 +898,28 @@ export const getPostBySlug = async (slug: string): Promise<BlogPost | null> => {
 }
 ```
 
-### 3. 클라이언트 컴포넌트에서 서버 함수 사용 불가
+### 3. Vercel 배포 시 404 에러
 
-**문제**: `'use client'`가 있는 컴포넌트에서는 `generateStaticParams()`를 export할 수 없습니다.
+**문제**: Vercel에 배포 후 동적 라우트(`/blog/[tag]`, `/blog/[tag]/[slug]`)에 접근 시 404 에러 발생
 
-**해결**: 페이지를 서버 컴포넌트로 만들고, 클라이언트 로직은 별도 컴포넌트로 분리합니다.
+**원인**: 
+- `generateStaticParams()`를 사용하면 빌드 시점에 생성된 경로만 접근 가능
+- 빌드 시점에 Firebase 접근 실패 시 빈 배열 반환으로 인해 경로가 생성되지 않음
+
+**해결**: 
+- `generateStaticParams()`를 완전히 제거하여 동적 렌더링으로 전환
+- 모든 동적 라우트가 런타임에 동적으로 처리되도록 설정
+- 요청 시점에 Firebase에서 데이터를 가져와 렌더링
 
 ```typescript
-// page.tsx (서버 컴포넌트)
-import EditPostClient from './EditPostClient'
-
-export async function generateStaticParams() {
+// ✅ 올바른 방법: generateStaticParams() 없이 동적 렌더링
+export default async function TagPage({ params }: PageProps) {
+  const decodedTag = decodeURIComponent(params.tag)
+  const project = await getProjectByTag(decodedTag)
+  const posts = await getPostsByTag(decodedTag)
+  
+  // 런타임에 데이터 가져오기
   // ...
-}
-
-export default function EditPostPage({ params }: PageProps) {
-  return <EditPostClient postId={params.id} />
-}
-
-// EditPostClient.tsx (클라이언트 컴포넌트)
-'use client'
-export default function EditPostClient({ postId }: { postId: string }) {
-  // 클라이언트 로직
 }
 ```
 
@@ -863,6 +930,7 @@ export default function EditPostClient({ postId }: { postId: string }) {
 **해결**: 
 1. Firebase 콘솔에서 보안 규칙을 올바르게 설정
 2. 에러 처리를 추가하여 앱이 크래시하지 않도록 함
+3. Vercel 환경 변수가 올바르게 설정되어 있는지 확인
 
 ```typescript
 export const getAllPosts = async (): Promise<BlogPost[]> => {
@@ -873,6 +941,44 @@ export const getAllPosts = async (): Promise<BlogPost[]> => {
     return []
   }
 }
+```
+
+### 5. 마크다운 링크가 새 창에서 열리도록 설정
+
+**구현**: ReactMarkdown의 `components` prop을 사용하여 링크 컴포넌트를 커스터마이징
+
+```typescript
+<ReactMarkdown
+  remarkPlugins={[remarkGfm]}
+  components={{
+    a: ({ ...props }) => (
+      <a {...props} target="_blank" rel="noopener noreferrer" />
+    ),
+  }}
+>
+  {content}
+</ReactMarkdown>
+```
+
+**적용 위치:**
+- 프로젝트 설명 (`app/blog/[tag]/page.tsx`)
+- 블로그 글 내용 (`app/blog/[tag]/[slug]/page.tsx`)
+
+### 6. 프로젝트 설명 첫 줄만 표시
+
+**구현**: 프로젝트 목록 페이지에서 프로젝트 설명의 첫 번째 줄(엔터 이전)만 표시
+
+```typescript
+{project && project.description && (
+  <p className={styles.projectDescription}>
+    {(() => {
+      const firstLine = project.description.split(/\r?\n/)[0] || ''
+      return firstLine.length > 50 
+        ? `${firstLine.substring(0, 50)}...` 
+        : firstLine
+    })()}
+  </p>
+)}
 ```
 
 ## 📝 라이선스
@@ -886,6 +992,3 @@ export const getAllPosts = async (): Promise<BlogPost[]> => {
 - Blog: [Naver Blog](https://blog.naver.com/kimdowan1004)
 - Instagram: [@dowan.kim_developer](https://www.instagram.com/dowan.kim_developer/)
 
----
-
-이 README는 프로젝트의 주요 기능과 구조를 상세히 설명합니다. 추가 질문이나 개선 사항이 있으면 이슈를 등록해주세요.

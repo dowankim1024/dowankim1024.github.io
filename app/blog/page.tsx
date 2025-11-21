@@ -33,8 +33,8 @@ export default async function BlogPage() {
                 <h2 className={styles.projectTitle}>{tag}</h2>
                 {project && project.description && (
                   <p className={styles.projectDescription}>
-                    {project.description.length > 100 
-                      ? `${project.description.substring(0, 100)}...` 
+                    {project.description.length > 50 
+                      ? `${project.description.substring(0, 50)}...` 
                       : project.description}
                   </p>
                 )}

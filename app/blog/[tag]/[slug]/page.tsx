@@ -52,6 +52,11 @@ export default async function BlogPostPage({ params }: PageProps) {
           <ReactMarkdown
             rehypePlugins={[rehypeRaw]}
             remarkPlugins={[remarkGfm]}
+            components={{
+              a: ({ ...props }) => (
+                <a {...props} target="_blank" rel="noopener noreferrer" />
+              ),
+            }}
           >
             {post.content}
           </ReactMarkdown>

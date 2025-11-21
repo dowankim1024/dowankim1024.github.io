@@ -4,6 +4,7 @@ import { getProjectByTag, getPostsByTag } from '@/lib/blog'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import styles from './page.module.css'
+import Header from '@/components/Home/Header/Header'
 
 interface PageProps {
   params: {
@@ -22,12 +23,20 @@ export default async function TagPage({ params }: PageProps) {
 
   return (
     <section className={styles.section}>
+      <Header />
       <div className={styles.container}>
         <h1 className={styles.title}>{decodedTag}</h1>
         
         {project && project.description && (
           <div className={styles.description}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown 
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ ...props }) => (
+                  <a {...props} target="_blank" rel="noopener noreferrer" />
+                ),
+              }}
+            >
               {project.description}
             </ReactMarkdown>
           </div>
