@@ -1,0 +1,178 @@
+.container {
+  min-height: 100vh;
+  background-color: #050a13;
+  color: #ffffff;
+  padding: 8rem 1rem 4rem;
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #03e8f9;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.backButton,
+.logoutButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+}
+
+.backButton {
+  background-color: transparent;
+  color: #03e8f9;
+  border: 1px solid #03e8f9;
+}
+
+.backButton:hover {
+  background-color: #03e8f9;
+  color: #050a13;
+}
+
+.logoutButton {
+  background-color: #fd6413;
+  color: #ffffff;
+}
+
+.logoutButton:hover {
+  background-color: #e55a0f;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.25rem;
+  color: #03e8f9;
+  padding: 4rem 0;
+}
+
+.projects {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.projectCard {
+  background-color: #1b1e26;
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(3, 232, 249, 0.2);
+}
+
+.projectTitle {
+  font-size: 1.5rem;
+  color: #03e8f9;
+  margin-bottom: 1.5rem;
+}
+
+.projectContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.projectDescription {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.noDescription {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+.editButton {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: #03e8f9;
+  border: 1px solid #03e8f9;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.editButton:hover {
+  background-color: #03e8f9;
+  color: #050a13;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.textarea {
+  background-color: #050a13;
+  color: #ffffff;
+  border: 1px solid rgba(3, 232, 249, 0.3);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 150px;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #03e8f9;
+}
+
+.editActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.saveButton,
+.cancelButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 1rem;
+}
+
+.saveButton {
+  background-color: #03e8f9;
+  color: #050a13;
+}
+
+.saveButton:hover {
+  background-color: #02d4e3;
+}
+
+.cancelButton {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cancelButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+

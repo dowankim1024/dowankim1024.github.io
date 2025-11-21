@@ -1,0 +1,92 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #050a13;
+  padding: 2rem;
+}
+
+.loginBox {
+  background-color: #1b1e26;
+  padding: 3rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(3, 232, 249, 0.2);
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  color: #03e8f9;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label {
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.inputGroup input {
+  padding: 0.75rem;
+  border: 1px solid rgba(3, 232, 249, 0.3);
+  border-radius: 0.5rem;
+  background-color: #050a13;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: #03e8f9;
+}
+
+.inputGroup input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #fd6413;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0;
+}
+
+.submitButton {
+  padding: 0.75rem;
+  background-color: #03e8f9;
+  color: #050a13;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: transparent;
+  color: #03e8f9;
+  border: 1px solid #03e8f9;
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

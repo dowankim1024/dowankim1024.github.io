@@ -1,3 +1,4 @@
-export const NAV_SECTIONS = ['home', 'about', 'career', 'work', 'contact'] as const
-
-export type NavSection = typeof NAV_SECTIONS[number]
+export const NAV_ITEMS = [
+  { label: 'Home', href: '/' },
+  { label: 'Projects', href: '/blog' },
+] as const

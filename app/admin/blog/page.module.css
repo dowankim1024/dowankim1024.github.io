@@ -1,0 +1,191 @@
+.container {
+  min-height: 100vh;
+  background-color: #050a13;
+  color: #ffffff;
+  padding: 8rem 1rem 4rem;
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #03e8f9;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.writeButton,
+.projectsButton,
+.logoutButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+  font-size: 1rem;
+}
+
+.writeButton {
+  background-color: #03e8f9;
+  color: #050a13;
+}
+
+.writeButton:hover {
+  background-color: transparent;
+  color: #03e8f9;
+  border: 1px solid #03e8f9;
+}
+
+.projectsButton {
+  background-color: transparent;
+  color: #03e8f9;
+  border: 1px solid #03e8f9;
+}
+
+.projectsButton:hover {
+  background-color: #03e8f9;
+  color: #050a13;
+}
+
+.logoutButton {
+  background-color: #fd6413;
+  color: #ffffff;
+}
+
+.logoutButton:hover {
+  background-color: transparent;
+  color: #fd6413;
+  border: 1px solid #fd6413;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  font-size: 1.25rem;
+  opacity: 0.6;
+  padding: 4rem 0;
+}
+
+.posts {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.postCard {
+  background-color: #1b1e26;
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(3, 232, 249, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.postInfo {
+  flex: 1;
+}
+
+.postTitle {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.postDate {
+  font-size: 0.9rem;
+  color: #03e8f9;
+  margin-bottom: 0.5rem;
+}
+
+.published,
+.draft {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.published {
+  background-color: rgba(3, 232, 249, 0.2);
+  color: #03e8f9;
+}
+
+.draft {
+  background-color: rgba(253, 100, 19, 0.2);
+  color: #fd6413;
+}
+
+.postActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.editButton,
+.deleteButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.editButton {
+  background-color: #03e8f9;
+  color: #050a13;
+}
+
+.editButton:hover {
+  background-color: transparent;
+  color: #03e8f9;
+  border: 1px solid #03e8f9;
+}
+
+.deleteButton {
+  background-color: #fd6413;
+  color: #ffffff;
+}
+
+.deleteButton:hover {
+  background-color: transparent;
+  color: #fd6413;
+  border: 1px solid #fd6413;
+}
+
+@media (max-width: 768px) {
+  .postCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .postActions {
+    width: 100%;
+  }
+  
+  .editButton,
+  .deleteButton {
+    flex: 1;
+  }
+}
+
