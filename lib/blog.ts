@@ -87,23 +87,40 @@ export const uploadImages = async (files: File[], postId: string): Promise<strin
 }
 
 // 포스트 생성
-export const createPost = async (postData: Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+export const createPost = async (postData: Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt'> & { createdAt?: Date | Timestamp }): Promise<string> => {
   const now = Timestamp.now()
+  // createdAt이 제공되면 사용, 없으면 현재 시간 사용
+  const createdAtTimestamp = postData.createdAt 
+    ? (postData.createdAt instanceof Date ? Timestamp.fromDate(postData.createdAt) : postData.createdAt)
+    : now
+  
+  // createdAt을 제외한 나머지 데이터만 사용
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { createdAt: _createdAt, ...restPostData } = postData
+  
   const docRef = await addDoc(collection(db, POSTS_COLLECTION), {
-    ...postData,
-    createdAt: now,
+    ...restPostData,
+    createdAt: createdAtTimestamp,
     updatedAt: now,
   })
   return docRef.id
 }
 
 // 포스트 업데이트
-export const updatePost = async (id: string, postData: Partial<BlogPost>): Promise<void> => {
+export const updatePost = async (id: string, postData: Partial<BlogPost> & { createdAt?: Date | Timestamp }): Promise<void> => {
   const docRef = doc(db, POSTS_COLLECTION, id)
-  await updateDoc(docRef, {
-    ...postData,
-    updatedAt: Timestamp.now(),
-  })
+  
+  // createdAt이 제공되면 Timestamp로 변환
+  const updateData: Record<string, unknown> = { ...postData }
+  if (updateData.createdAt) {
+    updateData.createdAt = updateData.createdAt instanceof Date 
+      ? Timestamp.fromDate(updateData.createdAt) 
+      : updateData.createdAt
+  }
+  
+  updateData.updatedAt = Timestamp.now()
+  
+  await updateDoc(docRef, updateData)
 }
 
 // 포스트 삭제
@@ -234,10 +251,19 @@ export const upsertProject = async (tag: string, description: string): Promise<s
   } else {
     // 기존 프로젝트 업데이트
     const docRef = snapshot.docs[0].ref
-    await updateDoc(docRef, {
-      description,
+    const existingData = snapshot.docs[0].data()
+    
+    // 빈 문자열이 전달되면 기존 description 유지
+    const updateData: Record<string, unknown> = {
       updatedAt: now,
-    })
+    }
+    
+    // description이 빈 문자열이 아니거나, 기존에 description이 없을 때만 업데이트
+    if (description.trim() !== '' || !existingData.description) {
+      updateData.description = description
+    }
+    
+    await updateDoc(docRef, updateData)
     return docRef.id
   }
 }

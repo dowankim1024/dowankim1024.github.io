@@ -17,6 +17,16 @@ export default function WritePostPage() {
   const [content, setContent] = useState('')
   const [tags, setTags] = useState('')
   const [published, setPublished] = useState(true)
+  const [createdAt, setCreatedAt] = useState(() => {
+    // 현재 날짜와 시간을 YYYY-MM-DDTHH:mm 형식으로 반환
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+    const hours = String(now.getHours()).padStart(2, '0')
+    const minutes = String(now.getMinutes()).padStart(2, '0')
+    return `${year}-${month}-${day}T${hours}:${minutes}`
+  })
   const [images, setImages] = useState<File[]>([])
   const [uploading, setUploading] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
@@ -151,6 +161,9 @@ export default function WritePostPage() {
       // 태그 추출
       const postTags = tags.split(',').map(t => t.trim()).filter(t => t)
 
+      // 날짜 변환 (문자열 → Date → Timestamp)
+      const createdAtDate = new Date(createdAt)
+
       // 포스트 생성
       await createPost({
         title,
@@ -160,6 +173,7 @@ export default function WritePostPage() {
         tags: postTags,
         published,
         slug,
+        createdAt: createdAtDate,
       })
 
       // 각 태그에 대해 프로젝트 생성 또는 업데이트 (기본 설명 없음)
@@ -233,6 +247,18 @@ export default function WritePostPage() {
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="예: React, Next.js, Firebase"
+              disabled={uploading}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="createdAt">작성 날짜</label>
+            <input
+              id="createdAt"
+              type="datetime-local"
+              value={createdAt}
+              onChange={(e) => setCreatedAt(e.target.value)}
               disabled={uploading}
               className={styles.input}
             />

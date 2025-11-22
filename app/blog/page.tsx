@@ -34,9 +34,14 @@ export default async function BlogPage() {
                 <h2 className={styles.projectTitle}>{tag}</h2>
                 {project && project.description && (
                   <p className={styles.projectDescription}>
-                    {project.description.length > 50 
-                      ? `${project.description.substring(0, 50)}...` 
-                      : project.description}
+                    {(() => {
+                      // 첫 번째 줄만 가져오기 (엔터 전까지)
+                      const firstLine = project.description.split(/\r?\n/)[0] || ''
+                      // 필요시 길이 제한 (예: 100자)
+                      return firstLine.length > 100 
+                        ? `${firstLine.substring(0, 100)}...` 
+                        : firstLine
+                    })()}
                   </p>
                 )}
               </Link>

@@ -22,6 +22,7 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
   const [content, setContent] = useState('')
   const [tags, setTags] = useState('')
   const [published, setPublished] = useState(true)
+  const [createdAt, setCreatedAt] = useState('')
   const [images, setImages] = useState<File[]>([])
   const [existingImages, setExistingImages] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
@@ -38,6 +39,19 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
         setTags(post.tags?.join(', ') || '')
         setPublished(post.published)
         setExistingImages(post.images || [])
+        
+        // createdAt 날짜를 datetime-local 형식으로 변환
+        const date = post.createdAt instanceof Date 
+          ? post.createdAt 
+          : 'toDate' in post.createdAt 
+            ? (post.createdAt as { toDate: () => Date }).toDate()
+            : new Date(post.createdAt as string | number)
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hours = String(date.getHours()).padStart(2, '0')
+        const minutes = String(date.getMinutes()).padStart(2, '0')
+        setCreatedAt(`${year}-${month}-${day}T${hours}:${minutes}`)
       }
     } catch {
       setError('포스트를 불러오는 중 오류가 발생했습니다.')
@@ -159,6 +173,9 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
       // 기존 이미지와 새 이미지 합치기
       const allImageUrls = [...existingImages, ...newImageUrls]
 
+      // 날짜 변환 (문자열 → Date)
+      const createdAtDate = new Date(createdAt)
+
       // 포스트 업데이트
       await updatePost(postId, {
         title,
@@ -166,6 +183,7 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
         images: allImageUrls,
         tags: tags.split(',').map(t => t.trim()).filter(t => t),
         published,
+        createdAt: createdAtDate,
       })
 
       router.push('/admin/blog')
@@ -244,6 +262,18 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="예: React, Next.js, Firebase"
+              disabled={uploading}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="createdAt">작성 날짜</label>
+            <input
+              id="createdAt"
+              type="datetime-local"
+              value={createdAt}
+              onChange={(e) => setCreatedAt(e.target.value)}
               disabled={uploading}
               className={styles.input}
             />
