@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import styles from './page.module.css'
+import Header from '@/components/Home/Header/Header'
 
 interface PageProps {
   params: {
@@ -21,8 +22,10 @@ export default async function BlogPostPage({ params }: PageProps) {
   }
 
   return (
-    <article className={styles.article}>
-      <div className={styles.container}>
+    <>
+      <Header />
+      <article className={styles.article}>
+        <div className={styles.container}>
         <header className={styles.header}>
           <h1 className={styles.title}>{post.title}</h1>
           <p className={styles.date}>
@@ -62,7 +65,8 @@ export default async function BlogPostPage({ params }: PageProps) {
           </ReactMarkdown>
         </div>
       </div>
-    </article>
+      </article>
+    </>
   )
 }
 

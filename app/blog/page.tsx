@@ -15,9 +15,10 @@ export default async function BlogPage() {
   }))
 
   return (
-    <section className={styles.section}>
+    <>
       <Header />
-      <div className={styles.container}>
+      <section className={styles.section}>
+        <div className={styles.container}>
         <h1 className={styles.title}>Projects</h1>
         <p className={styles.subtitle}>프로젝트별 개발 과정을 블로그 형식으로 정리하였습니다.<br/>프로젝트 클릭 시 해당 프로젝트의 블로그 글을 확인할 수 있습니다.</p>
         {projectTags.length === 0 ? (
@@ -43,7 +44,8 @@ export default async function BlogPage() {
           </div>
         )}
       </div>
-    </section>
+      </section>
+    </>
   )
 }
 

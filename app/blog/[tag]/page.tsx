@@ -22,9 +22,10 @@ export default async function TagPage({ params }: PageProps) {
   }
 
   return (
-    <section className={styles.section}>
+    <>
       <Header />
-      <div className={styles.container}>
+      <section className={styles.section}>
+        <div className={styles.container}>
         <h1 className={styles.title}>{decodedTag}</h1>
         
         {project && project.description && (
@@ -64,7 +65,8 @@ export default async function TagPage({ params }: PageProps) {
           ))}
         </div>
       </div>
-    </section>
+      </section>
+    </>
   )
 }
 
