@@ -9,6 +9,9 @@ import {
   query,
   orderBy,
   where,
+  limit,
+  startAfter,
+  QueryDocumentSnapshot,
   Timestamp 
 } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
@@ -179,6 +182,53 @@ export const getPostsByTag = async (tag: string): Promise<BlogPost[]> => {
     createdAt: doc.data().createdAt.toDate(),
     updatedAt: doc.data().updatedAt.toDate(),
   })) as BlogPost[]
+}
+
+// 특정 태그의 포스트 가져오기 (페이지네이션)
+export const getPostsByTagPaginated = async (
+  tag: string,
+  pageSize: number = 12,
+  lastDoc?: QueryDocumentSnapshot
+): Promise<{ posts: BlogPost[], lastDoc: QueryDocumentSnapshot | null, hasMore: boolean }> => {
+  let q = query(
+    collection(db, POSTS_COLLECTION),
+    where('tags', 'array-contains', tag),
+    where('published', '==', true),
+    orderBy('createdAt', 'desc'),
+    limit(pageSize + 1) // 한 개 더 가져와서 hasMore 확인
+  )
+
+  if (lastDoc) {
+    q = query(
+      collection(db, POSTS_COLLECTION),
+      where('tags', 'array-contains', tag),
+      where('published', '==', true),
+      orderBy('createdAt', 'desc'),
+      startAfter(lastDoc),
+      limit(pageSize + 1)
+    )
+  }
+
+  const snapshot = await getDocs(q)
+  const docs = snapshot.docs
+  const hasMore = docs.length > pageSize
+  const postsToReturn = hasMore ? docs.slice(0, pageSize) : docs
+
+  const posts = postsToReturn.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+    createdAt: doc.data().createdAt.toDate(),
+    updatedAt: doc.data().updatedAt.toDate(),
+  })) as BlogPost[]
+
+  // lastDoc은 원본 DocumentSnapshot을 반환해야 함
+  const lastDocument = postsToReturn.length > 0 ? docs[postsToReturn.length - 1] : null
+
+  return {
+    posts,
+    lastDoc: lastDocument,
+    hasMore
+  }
 }
 
 // 모든 프로젝트(태그) 가져오기

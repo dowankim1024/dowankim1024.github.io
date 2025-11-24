@@ -111,3 +111,25 @@
   margin-bottom: 1rem;
 }
 
+.observer {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.loading {
+  color: #03e8f9;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.noMore {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 3rem;
+  padding: 2rem;
+}
+

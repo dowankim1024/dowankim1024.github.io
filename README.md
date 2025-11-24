@@ -1495,6 +1495,384 @@ useEffect(() => {
 - 대안: JavaScript로 DOM 직접 조작
 - 최후의 수단: 라이브러리 포크/수정 또는 다른 라이브러리 사용
 
+### 13. 블로그 포스트 목록에 무한 스크롤 구현
+
+**문제**: 블로그 포스트가 많아질수록 초기 로딩 시간이 길어지고, 사용자 경험이 저하될 가능성이 존재합니다.
+
+**무한 스크롤을 선택한 이유**:
+1. **성능 개선**: 초기 로딩 시 필요한 데이터만 가져와서 빠른 첫 화면 렌더링
+2. **사용자 경험 향상**: 스크롤만으로 추가 콘텐츠를 자연스럽게 탐색 가능
+3. **네트워크 효율성**: 필요한 만큼만 데이터를 가져와서 불필요한 데이터 전송 방지
+4. **모바일 친화적**: 모바일 환경에서 페이지네이션 버튼보다 스크롤이 더 직관적
+
+**구현 방식 선택: 하이브리드 방식 (SSR + 클라이언트 사이드)**
+- SEO를 버릴수는 없어 초기 데이터를 SSR로 가져오면서, 블로그 글 순서 배치를 역순으로 하여 이 뒤에 데이터가 더 남아있다는 것을 사용자가 인지하게 하며 무한스크롤을 구현하고자 합니다.
+
+**선택 이유**:
+- **초기 데이터는 SSR**: SEO 최적화 및 빠른 첫 화면 렌더링
+- **추가 데이터는 클라이언트**: 사용자 인터랙션에 따라 동적으로 로드
+- **최적의 균형**: SEO와 사용자 경험을 모두 고려
+
+**사용 기술**:
+- **Firestore 페이지네이션**: `limit()`, `startAfter()`를 사용한 커서 기반 페이지네이션
+- **Intersection Observer API**: 스크롤 감지를 위한 브라우저 네이티브 API
+- **React Hooks**: `useState`, `useEffect`, `useCallback`, `useRef`를 활용한 상태 관리
+- **Next.js 하이브리드 렌더링**: 서버 컴포넌트와 클라이언트 컴포넌트 조합
+
+**구현 과정**:
+
+#### 1. Firestore 페이지네이션 함수 추가 (`lib/blog.ts`)
+
+**핵심 로직**:
+- `limit(pageSize + 1)`: 요청한 개수보다 1개 더 가져와서 다음 페이지 존재 여부 확인
+- `startAfter(lastDoc)`: 마지막 문서 이후부터 가져오기
+- `hasMore` 계산: 가져온 문서가 `pageSize + 1`개면 다음 페이지가 있다는 의미
+
+**구현 코드**:
+```typescript
+export const getPostsByTagPaginated = async (
+  tag: string,
+  pageSize: number = 12,
+  lastDoc?: QueryDocumentSnapshot
+): Promise<{ posts: BlogPost[], lastDoc: QueryDocumentSnapshot | null, hasMore: boolean }> => {
+  let q = query(
+    collection(db, POSTS_COLLECTION),
+    where('tags', 'array-contains', tag),
+    where('published', '==', true),
+    orderBy('createdAt', 'desc'),
+    limit(pageSize + 1) // 한 개 더 가져와서 hasMore 확인
+  )
+
+  if (lastDoc) {
+    q = query(
+      collection(db, POSTS_COLLECTION),
+      where('tags', 'array-contains', tag),
+      where('published', '==', true),
+      orderBy('createdAt', 'desc'),
+      startAfter(lastDoc), // 마지막 문서 이후부터
+      limit(pageSize + 1)
+    )
+  }
+
+  const snapshot = await getDocs(q)
+  const docs = snapshot.docs
+  const hasMore = docs.length > pageSize // 13개면 다음 페이지 있음
+  const postsToReturn = hasMore ? docs.slice(0, pageSize) : docs // 마지막 1개 제거
+
+  const posts = postsToReturn.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+    createdAt: doc.data().createdAt.toDate(),
+    updatedAt: doc.data().updatedAt.toDate(),
+  })) as BlogPost[]
+
+  return {
+    posts,
+    lastDoc: postsToReturn.length > 0 ? docs[postsToReturn.length - 1] : null,
+    hasMore
+  }
+}
+```
+
+**왜 `pageSize + 1`을 가져오는가?**:
+- 정확한 `hasMore` 판단을 위해 다음 페이지 존재 여부를 확인해야 함
+- 예: 12개를 요청했는데 13개가 오면 다음 페이지가 있다는 의미
+- 마지막 1개는 반환하지 않고 `hasMore` 판단에만 사용
+
+#### 2. 하이브리드 페이지 구조 (`app/blog/[tag]/page.tsx`)
+
+**서버 컴포넌트에서 초기 데이터만 가져오기**:
+```typescript
+export default async function TagPage({ params }: PageProps) {
+  const decodedTag = decodeURIComponent(params.tag)
+  const project = await getProjectByTag(decodedTag)
+  
+  // 초기 12개만 서버에서 가져오기
+  const initialResult = await getPostsByTagPaginated(decodedTag, 12)
+  const initialPosts = initialResult.posts
+
+  if (initialPosts.length === 0) {
+    notFound()
+  }
+
+  return (
+    <>
+      <Header />
+      <section className={styles.section}>
+        <div className={styles.container}>
+          <h1 className={styles.title}>{decodedTag}</h1>
+          {/* 프로젝트 설명 */}
+          <PostList initialPosts={initialPosts} tag={decodedTag} />
+        </div>
+      </section>
+    </>
+  )
+}
+```
+
+**장점**:
+- 초기 12개는 서버에서 렌더링되어 SEO에 유리
+- 빠른 첫 화면 렌더링
+- 나머지는 클라이언트에서 동적으로 로드
+
+#### 3. 클라이언트 컴포넌트에서 무한 스크롤 구현 (`PostList.tsx`)
+
+**상태 관리**:
+```typescript
+const [posts, setPosts] = useState<BlogPost[]>(initialPosts) // 초기 데이터로 시작
+const [loading, setLoading] = useState(false) // 로딩 상태
+const [hasMore, setHasMore] = useState(initialPosts.length === 12) // 초기 데이터가 12개면 다음 페이지 가능
+const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null) // 마지막 문서 스냅샷
+const [isFirstLoad, setIsFirstLoad] = useState(true) // 첫 번째 로드인지 확인
+const observerRef = useRef<HTMLDivElement>(null) // Intersection Observer 타겟
+```
+
+**useCallback 사용 이유**:
+
+1. **의존성 배열 관리**: `useEffect`의 의존성 배열에 함수를 넣을 때, 함수가 매 렌더링마다 새로 생성되면 `useEffect`가 불필요하게 재실행됨
+2. **메모이제이션**: `useCallback`으로 함수를 메모이제이션하여 의존성이 변경되지 않으면 같은 함수 참조 유지
+3. **무한 루프 방지**: `useEffect`의 의존성 배열에 `loadMore`를 넣어야 하는데, `useCallback` 없이는 매번 새로운 함수가 생성되어 `useEffect`가 계속 재실행됨
+
+**구현 코드**:
+```typescript
+const loadMore = useCallback(async () => {
+  if (loading || !hasMore) return
+
+  setLoading(true)
+  try {
+    let result
+    
+    // 첫 번째 로드이고 초기 데이터가 12개인 경우
+    if (isFirstLoad && initialPosts.length === 12) {
+      // 초기 데이터를 다시 가져와서 lastDoc을 얻음 (중복 방지)
+      const firstPageResult = await getPostsByTagPaginated(tag, 12)
+      if (firstPageResult.lastDoc) {
+        // 두 번째 페이지 가져오기
+        result = await getPostsByTagPaginated(tag, 12, firstPageResult.lastDoc)
+      } else {
+        result = { posts: [], lastDoc: null, hasMore: false }
+      }
+      setIsFirstLoad(false)
+    } else {
+      // 일반적인 경우
+      result = await getPostsByTagPaginated(tag, 12, lastDoc || undefined)
+    }
+    
+    if (result.posts.length > 0) {
+      setPosts(prev => [...prev, ...result.posts]) // 기존 포스트에 추가
+      setLastDoc(result.lastDoc)
+      setHasMore(result.hasMore)
+    } else {
+      setHasMore(false)
+    }
+  } catch (error) {
+    console.error('포스트 로드 실패:', error)
+    setHasMore(false)
+  } finally {
+    setLoading(false)
+  }
+}, [tag, lastDoc, loading, hasMore, isFirstLoad, initialPosts.length])
+```
+
+**`lastDoc`이란 무엇인가?**:
+
+`lastDoc`은 **현재 받아온 페이지의 마지막 문서**를 의미합니다. 전체 데이터의 마지막이 아닙니다.
+
+**예시**:
+- 전체 포스트가 50개라고 가정
+- 첫 번째 페이지: 1번~12번 포스트를 가져옴 → `lastDoc` = 12번 포스트 (이 페이지의 마지막)
+- 두 번째 페이지: `startAfter(12번)` → 13번~24번 포스트를 가져옴 → `lastDoc` = 24번 포스트
+- 세 번째 페이지: `startAfter(24번)` → 25번~36번 포스트를 가져옴 → `lastDoc` = 36번 포스트
+
+**왜 필요한가?**:
+- Firestore는 "이 문서 이후부터 가져와라"라는 커서 기반 페이지네이션을 사용
+- `lastDoc`을 사용하여 다음 페이지의 시작점을 지정
+- 각 페이지마다 새로운 `lastDoc`이 생성됨
+
+**첫 번째 로드와 일반 로드를 분기 처리하는 이유**:
+
+**핵심 문제**: `QueryDocumentSnapshot`은 직렬화할 수 없어서 서버에서 클라이언트로 전달할 수 없습니다.
+
+**상황 분석**:
+
+1. **서버에서 초기 데이터 가져오기**:
+   ```typescript
+   // page.tsx (서버 컴포넌트)
+   const initialResult = await getPostsByTagPaginated(decodedTag, 12)
+   // initialResult = {
+   //   posts: [1번, 2번, ..., 12번],
+   //   lastDoc: 12번 포스트의 QueryDocumentSnapshot,  ← 이게 문제!
+   //   hasMore: true
+   // }
+   ```
+
+2. **클라이언트로 전달**:
+   ```typescript
+   <PostList initialPosts={initialResult.posts} tag={decodedTag} />
+   // ❌ lastDoc은 전달할 수 없음!
+   // QueryDocumentSnapshot은 JSON으로 변환 불가 (직렬화 불가)
+   ```
+
+3. **클라이언트에서의 상황**:
+   ```typescript
+   // PostList.tsx (클라이언트 컴포넌트)
+   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null)
+   // 초기값이 null! ← 서버에서 전달받을 수 없으므로
+   ```
+
+4. **첫 번째 `loadMore` 호출 시 문제**:
+   ```typescript
+   // 만약 이렇게 하면?
+   result = await getPostsByTagPaginated(tag, 12, lastDoc || undefined)
+   // lastDoc이 null이므로 undefined가 전달됨
+   // → startAfter가 없으므로 첫 번째 페이지를 다시 가져옴
+   // → 초기 데이터와 중복! ❌
+   ```
+
+**해결 방법: 분기 처리**:
+
+**첫 번째 로드 (lastDoc이 없을 때)**:
+```typescript
+if (isFirstLoad && initialPosts.length === 12) {
+  // 1. 초기 데이터를 다시 가져와서 lastDoc을 얻음
+  const firstPageResult = await getPostsByTagPaginated(tag, 12)
+  // firstPageResult.lastDoc = 12번 포스트의 QueryDocumentSnapshot
+  
+  // 2. 이제 lastDoc을 사용해서 두 번째 페이지를 가져옴
+  result = await getPostsByTagPaginated(tag, 12, firstPageResult.lastDoc)
+  // → startAfter(12번) → 13번부터 시작 → 중복 없음! ✅
+}
+```
+
+**일반적인 경우 (lastDoc이 있을 때)**:
+```typescript
+else {
+  // 이미 lastDoc이 있으므로 바로 사용
+  result = await getPostsByTagPaginated(tag, 12, lastDoc || undefined)
+  // → startAfter(24번) → 25번부터 시작 → 정상 작동! ✅
+}
+```
+
+**전체 흐름**:
+
+```
+1. 서버에서 초기 데이터 가져오기
+   → posts: [1~12번], lastDoc: 12번 (하지만 전달 불가)
+
+2. 클라이언트로 전달
+   → initialPosts: [1~12번]만 전달
+   → lastDoc: null (전달 불가)
+
+3. 첫 번째 loadMore 호출
+   → lastDoc이 null이므로 초기 데이터를 다시 가져와서 lastDoc 획득
+   → 그 lastDoc을 사용해서 두 번째 페이지(13~24번) 가져오기
+   → lastDoc = 24번 저장
+
+4. 두 번째 loadMore 호출
+   → lastDoc = 24번이 있으므로 바로 사용
+   → 세 번째 페이지(25~36번) 가져오기
+   → lastDoc = 36번 저장
+
+5. 세 번째 loadMore 호출
+   → lastDoc = 36번이 있으므로 바로 사용
+   → 네 번째 페이지(37~48번) 가져오기
+   ...
+```
+
+**정리**:
+- **분기 처리 이유**: 서버에서 가져온 `lastDoc`을 클라이언트로 전달할 수 없기 때문
+- **첫 번째 로드**: `lastDoc`이 없으므로 초기 데이터를 다시 가져와서 `lastDoc` 획득
+- **두 번째 이후**: 이미 `lastDoc`이 있으므로 바로 사용
+
+**왜 Intersection Observer를 사용하는가?**:
+
+1. **성능**: `scroll` 이벤트보다 효율적 (브라우저가 최적화)
+2. **정확성**: 요소가 뷰포트에 들어오는 시점을 정확히 감지
+3. **간단함**: 스크롤 위치 계산 불필요
+4. **모바일 친화적**: 모바일 브라우저에서도 잘 작동
+
+**구현 코드**:
+```typescript
+useEffect(() => {
+  const currentObserver = observerRef.current
+  if (!currentObserver || !hasMore || loading) return
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        loadMore() // 하단 요소가 보이면 다음 페이지 로드
+      }
+    },
+    { threshold: 0.1 } // 10% 보이면 트리거
+  )
+
+  observer.observe(currentObserver)
+
+  return () => {
+    observer.disconnect() // cleanup
+  }
+}, [hasMore, loading, loadMore])
+```
+
+**cleanup 함수에서 `observerRef.current` 사용 시 주의사항**:
+- `observerRef.current`는 cleanup 시점에 변경될 수 있음
+- 따라서 `useEffect` 내부에서 `currentObserver` 변수에 저장하여 사용
+- cleanup 함수에서는 저장된 변수를 사용
+
+#### 4. UI 요소
+
+**스크롤 감지용 요소**:
+```tsx
+{hasMore && (
+  <div ref={observerRef} className={styles.observer}>
+    {loading && <p className={styles.loading}>로딩 중...</p>}
+  </div>
+)}
+```
+
+**왜 별도 요소를 사용하는가?**:
+- 포스트 리스트의 마지막 요소를 직접 관찰하면 스크롤이 끝나기 전에 트리거될 수 있음
+- 별도의 감지 요소를 사용하면 정확한 시점에 다음 페이지를 로드할 수 있음
+
+#### 5. Firebase 인덱스 설정
+
+**필요한 인덱스**:
+- Collection: `posts`
+- Fields:
+  - `tags` (Array)
+  - `published` (Ascending)
+  - `createdAt` (Descending)
+
+**인덱스 생성 방법**:
+1. 코드 실행 시 Firebase에서 인덱스 필요 에러 발생
+2. 에러 메시지에 인덱스 생성 링크 포함
+3. 링크 클릭하여 자동으로 인덱스 생성
+4. 인덱스 생성 완료 후 정상 작동
+
+**왜 인덱스가 필요한가?**:
+- `where`와 `orderBy`를 함께 사용하는 복합 쿼리는 인덱스가 필요
+- Firestore는 쿼리 성능을 위해 인덱스를 사용
+- 인덱스 없이는 쿼리가 실패하거나 매우 느려짐
+
+**구현 결과**:
+- 초기 로딩: 서버에서 첫 12개만 가져와서 빠른 렌더링
+- 무한 스크롤: 사용자가 스크롤하면 자동으로 다음 12개 로드
+- 성능: 필요한 만큼만 데이터를 가져와서 효율적
+- 사용자 경험: 자연스러운 스크롤 경험 제공
+
+**주의사항**:
+- 초기 데이터가 12개 미만이면 `hasMore`를 `false`로 설정
+- 첫 번째 로드 시 중복 방지를 위해 초기 데이터를 다시 가져와서 `lastDoc` 획득
+- `useCallback`을 사용하여 `useEffect`의 불필요한 재실행 방지
+- Intersection Observer cleanup을 제대로 처리하여 메모리 누수 방지
+
+**장점**:
+- ✅ SEO 최적화: 초기 데이터는 SSR로 제공
+- ✅ 빠른 초기 로딩: 필요한 만큼만 먼저 로드
+- ✅ 자연스러운 UX: 스크롤만으로 추가 콘텐츠 탐색
+- ✅ 네트워크 효율성: 필요한 만큼만 데이터 전송
+- ✅ 모바일 친화적: 페이지네이션 버튼보다 직관적
+
 ## 📝 라이선스
 
 이 프로젝트는 개인 포트폴리오 용도로 제작되었습니다.
@@ -1505,4 +1883,3 @@ useEffect(() => {
 - GitHub: [@dowankim1024](https://github.com/dowankim1024)
 - Blog: [Naver Blog](https://blog.naver.com/kimdowan1004)
 - Instagram: [@dowan.kim_developer](https://www.instagram.com/dowan.kim_developer/)
-

@@ -1,10 +1,10 @@
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getProjectByTag, getPostsByTag } from '@/lib/blog'
+import { getProjectByTag, getPostsByTagPaginated } from '@/lib/blog'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import styles from './page.module.css'
 import Header from '@/components/Home/Header/Header'
+import PostList from './PostList'
 
 interface PageProps {
   params: {
@@ -15,9 +15,11 @@ interface PageProps {
 export default async function TagPage({ params }: PageProps) {
   const decodedTag = decodeURIComponent(params.tag)
   const project = await getProjectByTag(decodedTag)
-  const posts = await getPostsByTag(decodedTag)
+  
+  const initialResult = await getPostsByTagPaginated(decodedTag, 12)
+  const initialPosts = initialResult.posts
 
-  if (posts.length === 0) {
+  if (initialPosts.length === 0) {
     notFound()
   }
 
@@ -43,27 +45,7 @@ export default async function TagPage({ params }: PageProps) {
           </div>
         )}
 
-        <div className={styles.posts}>
-          {posts.map((post) => (
-            <Link 
-              key={post.id} 
-              href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(post.slug || post.id || '')}`}
-              className={styles.postCard}
-            >
-              <h2 className={styles.postTitle}>{post.title}</h2>
-              <p className={styles.postDate}>
-                {(() => {
-                  const date = post.createdAt instanceof Date 
-                    ? post.createdAt 
-                    : 'toDate' in post.createdAt 
-                      ? (post.createdAt as { toDate: () => Date }).toDate()
-                      : new Date(post.createdAt as string | number)
-                  return date.toLocaleDateString('ko-KR')
-                })()}
-              </p>
-            </Link>
-          ))}
-        </div>
+        <PostList initialPosts={initialPosts} tag={decodedTag} />
       </div>
       </section>
     </>
