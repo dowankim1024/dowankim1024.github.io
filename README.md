@@ -981,6 +981,312 @@ export const getAllPosts = async (): Promise<BlogPost[]> => {
 )}
 ```
 
+### 7. 블로그 코드 블록에 Syntax Highlighting이 없었던 문제
+
+**문제**: 블로그 글에서 코드 블록을 작성했을 때, 코드가 모두 흰색으로 표시되어 타입별 색상 구분이 되지 않았습니다. 줄바꿈은 정상적으로 작동했지만, 코드 하이라이팅이 전혀 적용되지 않았습니다.
+
+**원인**: 
+- `ReactMarkdown`을 사용하여 마크다운을 렌더링하고 있었지만, 코드 블록에 대한 하이라이팅 처리가 없었습니다.
+- `react-syntax-highlighter` 패키지는 이미 설치되어 있었지만, `ReactMarkdown`의 `components` prop에서 코드 블록을 커스터마이징하지 않아 기본 스타일만 적용되고 있었습니다.
+
+**해결 방법**:
+1. `react-syntax-highlighter`의 `Prism` 컴포넌트를 import하여 사용
+2. `ReactMarkdown`의 `components` prop에서 `code` 컴포넌트를 커스터마이징
+3. 코드 블록의 `className`에서 언어 정보를 추출하여 `SyntaxHighlighter`에 전달
+4. 인라인 코드와 코드 블록을 구분하여 처리
+
+**사용 기술**:
+- `react-syntax-highlighter`: 코드 하이라이팅 라이브러리
+- `Prism`: Prism 기반 하이라이팅 엔진
+- `vscDarkPlus`: VS Code Dark Plus 테마 (다크 테마에 적합)
+
+**구현 코드**:
+```typescript
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
+
+// ReactMarkdown components prop에서
+code: ({ className, children, ...props }) => {
+  const match = /language-(\w+)/.exec(className || '')
+  const language = match ? match[1] : ''
+  const isInline = !match
+  
+  if (!isInline && match) {
+    return (
+      <SyntaxHighlighter
+        style={vscDarkPlus}
+        language={language}
+        PreTag="div"
+      >
+        {String(children).replace(/\n$/, '')}
+      </SyntaxHighlighter>
+    )
+  }
+  
+  return (
+    <code className={className} {...props}>
+      {children}
+    </code>
+  )
+}
+```
+
+**사용 방법**:
+마크다운에서 코드 블록을 작성할 때 언어를 지정하면 해당 언어에 맞는 하이라이팅이 자동으로 적용됩니다:
+
+````markdown
+```javascript
+const hello = "world";
+console.log(hello);
+```
+
+```python
+def hello():
+    print("world")
+```
+````
+
+**참고**: 인라인 코드(백틱 하나)는 기존 스타일이 유지되고, 코드 블록(백틱 3개)만 하이라이팅이 적용됩니다.
+
+### 8. TypeScript any 타입 사용 문제
+
+**문제**: 코드 하이라이팅을 구현하면서 `any` 타입을 사용하여 타입 안전성을 해치고 있었습니다.
+
+**원인**:
+- `ReactMarkdown`의 `components` prop 타입이 복잡하여 정확한 타입을 지정하기 어려웠습니다.
+- `react-syntax-highlighter`의 `style` prop 타입이 복잡하여 타입 캐스팅이 필요했습니다.
+
+**해결 방법**:
+1. `react-markdown`에서 `Components` 타입을 import하여 사용
+2. TypeScript의 타입 추론을 활용하여 명시적 타입 지정 최소화
+3. `satisfies Components`를 사용하여 타입 안전성 확보
+4. 불필요한 props 전달을 제거하여 타입 충돌 방지
+
+**사용 기술**:
+- TypeScript `satisfies` 연산자: 타입 체크와 타입 추론을 동시에 활용
+- `Components` 타입: `react-markdown`에서 제공하는 컴포넌트 타입 정의
+
+**구현 코드**:
+```typescript
+import ReactMarkdown, { Components } from 'react-markdown'
+
+// any 타입 제거 전
+code({ className, children, ...props }: any) {
+  // ...
+}
+
+// any 타입 제거 후
+code: ({ className, children, ...props }) => {
+  // TypeScript가 자동으로 타입 추론
+  // ...
+},
+} satisfies Components  // 타입 안전성 보장
+```
+
+**장점**:
+- 타입 안전성 향상: 컴파일 타임에 타입 오류를 잡을 수 있음
+- 코드 가독성 향상: 명시적인 타입 정의로 코드 의도가 명확해짐
+- 유지보수성 향상: 타입 변경 시 자동으로 오류 감지
+
+### 9. Firebase 초기화 중복 방지
+
+**문제**: Firebase 앱이 여러 번 초기화되려고 시도하면 에러가 발생할 수 있습니다. 특히 개발 환경에서 Hot Module Replacement(HMR)가 발생할 때 문제가 생길 수 있습니다.
+
+**원인**:
+- Firebase는 한 번만 초기화되어야 하는데, 모듈이 여러 번 로드되면 재초기화를 시도합니다.
+- `initializeApp()`을 여러 번 호출하면 "Firebase: Firebase App named '[DEFAULT]' already exists" 에러가 발생합니다.
+
+**해결 방법**:
+- `getApps()`를 사용하여 이미 초기화된 앱이 있는지 확인
+- 앱이 이미 초기화되어 있으면 기존 앱을 재사용
+
+**사용 기술**:
+- Firebase `getApps()`: 초기화된 앱 목록 가져오기
+- 조건부 초기화: 앱이 없을 때만 초기화
+
+**구현 코드**:
+```typescript
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
+import { getAuth, Auth } from 'firebase/auth'
+import { getFirestore, Firestore } from 'firebase/firestore'
+import { getStorage, FirebaseStorage } from 'firebase/storage'
+
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+}
+
+// Firebase 초기화 (이미 초기화되어 있으면 재초기화 방지)
+let app: FirebaseApp
+if (getApps().length === 0) {
+  app = initializeApp(firebaseConfig)
+} else {
+  app = getApps()[0]
+}
+
+export const auth: Auth = getAuth(app)
+export const db: Firestore = getFirestore(app)
+export const storage: FirebaseStorage = getStorage(app)
+```
+
+**장점**:
+- 개발 환경에서 HMR 시에도 안정적으로 작동
+- 프로덕션 환경에서도 중복 초기화 방지
+- 에러 없이 Firebase 서비스를 사용 가능
+
+### 10. Firebase Timestamp와 Date 타입 변환 문제
+
+**문제**: Firebase Firestore에서 가져온 데이터의 `createdAt`과 `updatedAt` 필드가 `Timestamp` 타입인데, 이를 JavaScript `Date` 객체로 변환해야 하는 경우가 많습니다. 또한 클라이언트와 서버에서 타입이 다를 수 있습니다.
+
+**원인**:
+- Firestore는 `Timestamp` 타입을 사용하지만, 클라이언트에서는 `Date` 객체를 사용합니다.
+- 서버 사이드 렌더링(SSR)과 클라이언트 사이드에서 타입이 다를 수 있습니다.
+- `Timestamp`는 `toDate()` 메서드를 사용하여 `Date`로 변환해야 합니다.
+
+**해결 방법**:
+1. Firestore에서 데이터를 가져올 때 `Timestamp.toDate()`를 사용하여 변환
+2. 클라이언트에서도 타입을 확인하여 안전하게 변환
+3. 여러 타입을 고려한 유연한 변환 로직 구현
+
+**사용 기술**:
+- TypeScript 타입 가드: `instanceof`를 사용한 타입 체크
+- 조건부 타입 변환: 타입에 따라 적절한 변환 수행
+
+**구현 코드**:
+```typescript
+// lib/blog.ts에서
+export const getPostBySlug = async (slug: string): Promise<BlogPost | null> => {
+  // ...
+  return {
+    id: docSnap.id,
+    ...docSnap.data(),
+    createdAt: docSnap.data().createdAt.toDate(),  // Timestamp를 Date로 변환
+    updatedAt: docSnap.data().updatedAt.toDate(),
+  } as BlogPost
+}
+
+// 페이지에서 날짜 표시
+{(() => {
+  const date = post.createdAt instanceof Date 
+    ? post.createdAt 
+    : 'toDate' in post.createdAt 
+      ? (post.createdAt as { toDate: () => Date }).toDate()
+      : new Date(post.createdAt as string | number)
+  return date.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+})()}
+```
+
+**장점**:
+- 타입 안전성: 다양한 타입을 안전하게 처리
+- 유연성: 서버와 클라이언트에서 모두 작동
+- 에러 방지: 타입 변환 실패 시 기본값 사용
+
+### 11. 클립보드 이미지 붙여넣기 기능 구현
+
+**문제**: 블로그 글 작성 시 이미지를 업로드하려면 파일 선택 다이얼로그를 열어야 하는데, 스크린샷을 복사한 후 바로 붙여넣기로 업로드하고 싶었습니다.
+
+**원인**:
+- 기본 마크다운 에디터는 클립보드 이미지 붙여넣기를 지원하지 않습니다.
+- 사용자 경험을 개선하기 위해 클립보드 이벤트를 직접 처리해야 합니다.
+
+**해결 방법**:
+1. `paste` 이벤트 리스너를 추가하여 클립보드 데이터 확인
+2. 클립보드에 이미지가 있으면 `preventDefault()`로 기본 동작 방지
+3. 이미지를 `File` 객체로 변환하여 Firebase Storage에 업로드
+4. 업로드된 이미지 URL을 마크다운 형식으로 에디터에 삽입
+5. 커서 위치를 유지하여 자연스러운 사용자 경험 제공
+
+**사용 기술**:
+- Clipboard API: `ClipboardEvent`를 통한 클립보드 데이터 접근
+- Firebase Storage: 이미지 파일 업로드
+- DOM 조작: 커서 위치 추적 및 설정
+
+**구현 코드**:
+```typescript
+useEffect(() => {
+  const handlePaste = async (e: ClipboardEvent) => {
+    const items = e.clipboardData?.items
+    if (!items) return
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
+      if (item.type.indexOf('image') !== -1) {
+        e.preventDefault()
+        const file = item.getAsFile()
+        if (!file) continue
+
+        setUploadingImage(true)
+        try {
+          const user = await getCurrentUser()
+          if (!user) {
+            alert('로그인이 필요합니다.')
+            return
+          }
+
+          // 이미지 업로드
+          const tempId = `temp_${Date.now()}`
+          const imageUrl = await uploadImage(file, tempId)
+          
+          // 마크다운 형식으로 삽입
+          const imageMarkdown = `\n![${file.name}](${imageUrl})\n`
+          
+          // 커서 위치 가져오기
+          let cursorPos = content.length
+          if (editorRef.current) {
+            const textarea = editorRef.current.querySelector('textarea') as HTMLTextAreaElement
+            if (textarea) {
+              cursorPos = textarea.selectionStart || content.length
+            }
+          }
+          
+          // 커서 위치에 이미지 삽입
+          const newContent = content.slice(0, cursorPos) + imageMarkdown + content.slice(cursorPos)
+          setContent(newContent)
+          
+          // 커서 위치 업데이트
+          setTimeout(() => {
+            if (editorRef.current) {
+              const textarea = editorRef.current.querySelector('textarea') as HTMLTextAreaElement
+              if (textarea) {
+                const newCursorPos = cursorPos + imageMarkdown.length
+                textarea.setSelectionRange(newCursorPos, newCursorPos)
+                textarea.focus()
+              }
+            }
+          }, 0)
+        } catch (err) {
+          console.error('이미지 업로드 실패:', err)
+          alert('이미지 업로드에 실패했습니다.')
+        } finally {
+          setUploadingImage(false)
+        }
+      }
+    }
+  }
+
+  const editorElement = editorRef.current
+  if (editorElement) {
+    editorElement.addEventListener('paste', handlePaste)
+    return () => {
+      editorElement.removeEventListener('paste', handlePaste)
+    }
+  }
+}, [content, images])
+```
+
+**장점**:
+- 사용자 경험 향상: 스크린샷 복사 후 바로 붙여넣기로 업로드 가능
+- 작업 효율성 향상: 파일 선택 다이얼로그를 열 필요 없음
+- 자연스러운 워크플로우: 일반적인 문서 편집기처럼 작동
+
 ## 📝 라이선스
 
 이 프로젝트는 개인 포트폴리오 용도로 제작되었습니다.

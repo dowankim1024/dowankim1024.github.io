@@ -95,16 +95,37 @@
 .content pre {
   background-color: #1b1e26;
   padding: 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: 0;
   overflow-x: auto;
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(3, 232, 249, 0.2);
+  border: none;
+  box-shadow: none;
 }
 
 .content pre code {
   background-color: transparent;
   color: #ffffff;
   padding: 0;
+}
+
+/* react-syntax-highlighter 스타일 오버라이드 */
+.content pre[class*="language-"] {
+  margin-bottom: 1.5rem;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  background-color: transparent !important;
+}
+
+.content pre[class*="language-"] code {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* react-syntax-highlighter 내부 요소 스타일 제거 */
+.content pre[class*="language-"] > div {
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .content blockquote {
