@@ -6,7 +6,6 @@ import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import styles from './page.module.css'
 import Header from '@/components/Home/Header/Header'
 
 interface PageProps {
@@ -37,11 +36,11 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <>
       <Header />
-      <article className={styles.article}>
-        <div className={styles.container}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>{post.title}</h1>
-          <p className={styles.date}>
+      <article className="min-h-screen bg-[#050a13] text-white pt-32 px-4 pb-16">
+        <div className="max-w-3xl mx-auto">
+        <header className="mb-12 pb-8 border-b border-[rgba(3,232,249,0.2)]">
+          <h1 className="text-4xl text-white mb-4">{post.title}</h1>
+          <p className="text-base text-white/60 mb-4">
             {(() => {
               const date = post.createdAt instanceof Date 
                 ? post.createdAt 
@@ -56,9 +55,9 @@ export default async function BlogPostPage({ params }: PageProps) {
             })()}
           </p>
           {post.tags && post.tags.length > 0 && (
-            <div className={styles.tags}>
+            <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
-                <span key={tag} className={styles.tag}>{tag}</span>
+                <span key={tag} className="bg-[rgba(3,232,249,0.1)] text-[#03e8f9] px-3 py-1 rounded text-sm">{tag}</span>
               ))}
             </div>
           )}
@@ -66,39 +65,39 @@ export default async function BlogPostPage({ params }: PageProps) {
         
         {/* 상단 네비게이션 */}
         {(prevPost || nextPost) && (
-          <nav className={styles.navigation}>
+          <nav className="flex justify-between gap-4 mb-12 pb-6 border-b border-[rgba(3,232,249,0.2)]">
             {prevPost ? (
               <Link 
                 href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(prevPost.slug || prevPost.id || '')}`}
-                className={styles.navButton}
+                className="flex items-center gap-4 px-6 py-4 bg-[rgba(3,232,249,0.05)] border border-[rgba(3,232,249,0.2)] rounded-lg no-underline text-inherit transition-all duration-300 flex-1 max-w-[48%] hover:bg-[rgba(3,232,249,0.1)] hover:border-[#03e8f9] hover:-translate-y-0.5"
               >
-                <span className={styles.navArrow}>←</span>
-                <div className={styles.navContent}>
-                  <span className={styles.navLabel}>이전 글</span>
-                  <span className={styles.navTitle}>{prevPost.title}</span>
+                <span className="text-2xl text-[#03e8f9] font-bold shrink-0">←</span>
+                <div className="flex flex-col gap-2 overflow-hidden">
+                  <span className="text-sm text-white/60 uppercase tracking-wider">이전 글</span>
+                  <span className="text-base text-white font-medium overflow-hidden text-ellipsis whitespace-nowrap">{prevPost.title}</span>
                 </div>
               </Link>
             ) : (
-              <div className={styles.navButton} style={{ visibility: 'hidden' }}></div>
+              <div className="flex items-center gap-4 px-6 py-4 bg-[rgba(3,232,249,0.05)] border border-[rgba(3,232,249,0.2)] rounded-lg no-underline text-inherit transition-all duration-300 flex-1 max-w-[48%] invisible"></div>
             )}
             {nextPost ? (
               <Link 
                 href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(nextPost.slug || nextPost.id || '')}`}
-                className={styles.navButton}
+                className="flex items-center gap-4 px-6 py-4 bg-[rgba(3,232,249,0.05)] border border-[rgba(3,232,249,0.2)] rounded-lg no-underline text-inherit transition-all duration-300 flex-1 max-w-[48%] hover:bg-[rgba(3,232,249,0.1)] hover:border-[#03e8f9] hover:-translate-y-0.5 justify-end"
               >
-                <div className={styles.navContent}>
-                  <span className={styles.navLabel}>다음 글</span>
-                  <span className={styles.navTitle}>{nextPost.title}</span>
+                <div className="flex flex-col gap-2 overflow-hidden text-right">
+                  <span className="text-sm text-white/60 uppercase tracking-wider">다음 글</span>
+                  <span className="text-base text-white font-medium overflow-hidden text-ellipsis whitespace-nowrap">{nextPost.title}</span>
                 </div>
-                <span className={styles.navArrow}>→</span>
+                <span className="text-2xl text-[#03e8f9] font-bold shrink-0">→</span>
               </Link>
             ) : (
-              <div className={styles.navButton} style={{ visibility: 'hidden' }}></div>
+              <div className="flex items-center gap-4 px-6 py-4 bg-[rgba(3,232,249,0.05)] border border-[rgba(3,232,249,0.2)] rounded-lg no-underline text-inherit transition-all duration-300 flex-1 max-w-[48%] invisible"></div>
             )}
           </nav>
         )}
         
-        <div className={styles.content}>
+        <div className="leading-[1.8] text-lg [&_h1]:text-white [&_h1]:mt-8 [&_h1]:mb-4 [&_h1]:text-3xl [&_h2]:text-white [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:text-2xl [&_h3]:text-white [&_h3]:mt-8 [&_h3]:mb-4 [&_h3]:text-xl [&_h4]:text-white [&_h4]:mt-8 [&_h4]:mb-4 [&_h5]:text-white [&_h5]:mt-8 [&_h5]:mb-4 [&_h6]:text-white [&_h6]:mt-8 [&_h6]:mb-4 [&_p]:mb-6 [&_ul]:mb-6 [&_ol]:mb-6 [&_ul]:pl-8 [&_ol]:pl-8 [&_li]:mb-2 [&_code]:bg-[rgba(3,232,249,0.1)] [&_code]:text-[#03e8f9] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_pre]:bg-[#1b1e26] [&_pre]:p-6 [&_pre]:rounded-none [&_pre]:overflow-x-auto [&_pre]:mb-6 [&_pre]:border-none [&_pre]:shadow-none [&_pre_code]:bg-transparent [&_pre_code]:text-white [&_pre_code]:p-0 [&_blockquote]:border-l-4 [&_blockquote]:border-[#03e8f9] [&_blockquote]:pl-6 [&_blockquote]:my-6 [&_blockquote]:text-white/80 [&_blockquote]:italic [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-8 [&_a]:text-[#03e8f9] [&_a]:underline hover:[&_a]:text-white [&_table]:w-full [&_table]:border-collapse [&_table]:my-6 [&_th]:border [&_th]:border-[rgba(3,232,249,0.2)] [&_th]:p-3 [&_th]:text-left [&_th]:bg-[rgba(3,232,249,0.1)] [&_th]:text-[#03e8f9] [&_td]:border [&_td]:border-[rgba(3,232,249,0.2)] [&_td]:p-3 [&_td]:text-left">
           <ReactMarkdown
             rehypePlugins={[rehypeRaw]}
             remarkPlugins={[remarkGfm]}
@@ -144,34 +143,34 @@ export default async function BlogPostPage({ params }: PageProps) {
         
         {/* 하단 네비게이션 */}
         {(prevPost || nextPost) && (
-          <nav className={styles.navigation}>
+          <nav className="flex justify-between gap-4 my-12 py-6 border-t border-b border-[rgba(3,232,249,0.2)]">
             {prevPost ? (
               <Link 
                 href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(prevPost.slug || prevPost.id || '')}`}
-                className={styles.navButton}
+                className="flex items-center gap-4 px-6 py-4 bg-[rgba(3,232,249,0.05)] border border-[rgba(3,232,249,0.2)] rounded-lg no-underline text-inherit transition-all duration-300 flex-1 max-w-[48%] hover:bg-[rgba(3,232,249,0.1)] hover:border-[#03e8f9] hover:-translate-y-0.5"
               >
-                <span className={styles.navArrow}>←</span>
-                <div className={styles.navContent}>
-                  <span className={styles.navLabel}>이전 글</span>
-                  <span className={styles.navTitle}>{prevPost.title}</span>
+                <span className="text-2xl text-[#03e8f9] font-bold shrink-0">←</span>
+                <div className="flex flex-col gap-2 overflow-hidden">
+                  <span className="text-sm text-white/60 uppercase tracking-wider">이전 글</span>
+                  <span className="text-base text-white font-medium overflow-hidden text-ellipsis whitespace-nowrap">{prevPost.title}</span>
                 </div>
               </Link>
             ) : (
-              <div className={styles.navButton} style={{ visibility: 'hidden' }}></div>
+              <div className="flex items-center gap-4 px-6 py-4 bg-[rgba(3,232,249,0.05)] border border-[rgba(3,232,249,0.2)] rounded-lg no-underline text-inherit transition-all duration-300 flex-1 max-w-[48%] invisible"></div>
             )}
             {nextPost ? (
               <Link 
                 href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(nextPost.slug || nextPost.id || '')}`}
-                className={styles.navButton}
+                className="flex items-center gap-4 px-6 py-4 bg-[rgba(3,232,249,0.05)] border border-[rgba(3,232,249,0.2)] rounded-lg no-underline text-inherit transition-all duration-300 flex-1 max-w-[48%] hover:bg-[rgba(3,232,249,0.1)] hover:border-[#03e8f9] hover:-translate-y-0.5 justify-end"
               >
-                <div className={styles.navContent}>
-                  <span className={styles.navLabel}>다음 글</span>
-                  <span className={styles.navTitle}>{nextPost.title}</span>
+                <div className="flex flex-col gap-2 overflow-hidden text-right">
+                  <span className="text-sm text-white/60 uppercase tracking-wider">다음 글</span>
+                  <span className="text-base text-white font-medium overflow-hidden text-ellipsis whitespace-nowrap">{nextPost.title}</span>
                 </div>
-                <span className={styles.navArrow}>→</span>
+                <span className="text-2xl text-[#03e8f9] font-bold shrink-0">→</span>
               </Link>
             ) : (
-              <div className={styles.navButton} style={{ visibility: 'hidden' }}></div>
+              <div className="flex items-center gap-4 px-6 py-4 bg-[rgba(3,232,249,0.05)] border border-[rgba(3,232,249,0.2)] rounded-lg no-underline text-inherit transition-all duration-300 flex-1 max-w-[48%] invisible"></div>
             )}
           </nav>
         )}

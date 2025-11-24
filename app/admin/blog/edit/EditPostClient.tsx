@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic'
 import AuthGuard from '@/components/AuthGuard'
 import { getPost, updatePost, uploadImages, uploadImage } from '@/lib/blog'
 import { getCurrentUser } from '@/lib/auth'
-import styles from '@/app/admin/blog/write/page.module.css'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
 
@@ -207,8 +206,8 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
   if (loading) {
     return (
       <AuthGuard>
-        <div className={styles.container}>
-          <p className={styles.loading}>로딩 중...</p>
+        <div className="min-h-screen bg-[#050a13] text-white pt-32 px-4 pb-16">
+          <p className="text-center text-xl opacity-60 py-16">로딩 중...</p>
         </div>
       </AuthGuard>
     )
@@ -216,12 +215,12 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
 
   return (
     <AuthGuard>
-      <div className={styles.container}>
-        <h1 className={styles.title}>글 수정</h1>
+      <div className="min-h-screen bg-[#050a13] text-white pt-32 px-4 pb-16">
+        <h1 className="text-4xl text-[#03e8f9] mb-12 text-center">글 수정</h1>
         
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.inputGroup}>
-            <label htmlFor="title">제목</label>
+        <form onSubmit={handleSubmit} className="max-w-[1000px] mx-auto flex flex-col gap-8">
+          <div className="flex flex-col gap-3">
+            <label htmlFor="title" className="text-lg font-bold text-white">제목</label>
             <input
               id="title"
               type="text"
@@ -229,14 +228,14 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
               onChange={(e) => setTitle(e.target.value)}
               required
               disabled={uploading}
-              className={styles.input}
+              className="px-3 py-3 border border-[rgba(3,232,249,0.3)] rounded-lg bg-[#1b1e26] text-white text-base transition-[border-color] duration-300 focus:outline-none focus:border-[#03e8f9] disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
-          <div className={styles.inputGroup}>
-            <label>내용 (마크다운)</label>
+          <div className="flex flex-col gap-3">
+            <label className="text-lg font-bold text-white">내용 (마크다운)</label>
             {uploadingImage && (
-              <p className={styles.uploading}>파일 업로드 중...</p>
+              <p className="text-[#03e8f9] text-sm my-0 px-2 py-2 bg-[rgba(3,232,249,0.1)] rounded">파일 업로드 중...</p>
             )}
             <div 
               ref={editorRef}
@@ -264,8 +263,8 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
             </div>
           </div>
 
-          <div className={styles.inputGroup}>
-            <label htmlFor="tags">태그 (쉼표로 구분)</label>
+          <div className="flex flex-col gap-3">
+            <label htmlFor="tags" className="text-lg font-bold text-white">태그 (쉼표로 구분)</label>
             <input
               id="tags"
               type="text"
@@ -273,33 +272,33 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
               onChange={(e) => setTags(e.target.value)}
               placeholder="예: React, Next.js, Firebase"
               disabled={uploading}
-              className={styles.input}
+              className="px-3 py-3 border border-[rgba(3,232,249,0.3)] rounded-lg bg-[#1b1e26] text-white text-base transition-[border-color] duration-300 focus:outline-none focus:border-[#03e8f9] disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
-          <div className={styles.inputGroup}>
-            <label htmlFor="createdAt">작성 날짜</label>
+          <div className="flex flex-col gap-3">
+            <label htmlFor="createdAt" className="text-lg font-bold text-white">작성 날짜</label>
             <input
               id="createdAt"
               type="datetime-local"
               value={createdAt}
               onChange={(e) => setCreatedAt(e.target.value)}
               disabled={uploading}
-              className={styles.input}
+              className="px-3 py-3 border border-[rgba(3,232,249,0.3)] rounded-lg bg-[#1b1e26] text-white text-base transition-[border-color] duration-300 focus:outline-none focus:border-[#03e8f9] disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
           {existingImages.length > 0 && (
-            <div className={styles.inputGroup}>
-              <label>기존 이미지</label>
-              <div className={styles.imagePreview}>
+            <div className="flex flex-col gap-3">
+              <label className="text-lg font-bold text-white">기존 이미지</label>
+              <div className="flex flex-col gap-2 mt-2">
                 {existingImages.map((url, index) => (
-                  <div key={index} className={styles.imageItem}>
+                  <div key={index} className="flex justify-between items-center px-3 py-3 bg-[#1b1e26] rounded-lg border border-[rgba(3,232,249,0.2)]">
                     <span>{url.split('/').pop()}</span>
                     <button
                       type="button"
                       onClick={() => removeExistingImage(index)}
-                      className={styles.removeButton}
+                      className="px-4 py-2 bg-[#fd6413] text-white border-none rounded cursor-pointer text-sm transition-all duration-300 hover:bg-transparent hover:text-[#fd6413] hover:border hover:border-[#fd6413]"
                     >
                       삭제
                     </button>
@@ -309,8 +308,8 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
             </div>
           )}
 
-          <div className={styles.inputGroup}>
-            <label htmlFor="images">새 이미지/비디오 업로드</label>
+          <div className="flex flex-col gap-3">
+            <label htmlFor="images" className="text-lg font-bold text-white">새 이미지/비디오 업로드</label>
             <input
               id="images"
               type="file"
@@ -318,17 +317,17 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
               accept="image/*,video/*"
               onChange={handleImageUpload}
               disabled={uploading}
-              className={styles.fileInput}
+              className="px-3 py-3 border border-[rgba(3,232,249,0.3)] rounded-lg bg-[#1b1e26] text-white text-base transition-[border-color] duration-300 focus:outline-none focus:border-[#03e8f9] disabled:opacity-50 disabled:cursor-not-allowed"
             />
             {images.length > 0 && (
-              <div className={styles.imagePreview}>
+              <div className="flex flex-col gap-2 mt-2">
                 {images.map((image, index) => (
-                  <div key={index} className={styles.imageItem}>
+                  <div key={index} className="flex justify-between items-center px-3 py-3 bg-[#1b1e26] rounded-lg border border-[rgba(3,232,249,0.2)]">
                     <span>{image.name}</span>
                     <button
                       type="button"
                       onClick={() => removeImage(index)}
-                      className={styles.removeButton}
+                      className="px-4 py-2 bg-[#fd6413] text-white border-none rounded cursor-pointer text-sm transition-all duration-300 hover:bg-transparent hover:text-[#fd6413] hover:border hover:border-[#fd6413]"
                     >
                       삭제
                     </button>
@@ -338,8 +337,8 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
             )}
           </div>
 
-          <div className={styles.checkboxGroup}>
-            <label htmlFor="published">
+          <div className="flex items-center gap-2">
+            <label htmlFor="published" className="flex items-center gap-2 cursor-pointer">
               <input
                 id="published"
                 name="published"
@@ -347,25 +346,26 @@ export default function EditPostClient({ postId }: EditPostClientProps) {
                 checked={published}
                 onChange={(e) => setPublished(e.target.checked)}
                 disabled={uploading}
+                className="w-5 h-5 cursor-pointer"
               />
               공개하기
             </label>
           </div>
 
-          {error && <p className={styles.error}>{error}</p>}
+          {error && <p className="text-[#fd6413] text-sm text-center my-0">{error}</p>}
 
-          <div className={styles.actions}>
+          <div className="flex gap-4 justify-end">
             <button
               type="button"
               onClick={() => router.back()}
-              className={styles.cancelButton}
+              className="px-8 py-3 rounded-lg font-bold cursor-pointer transition-all duration-300 border-none text-base bg-[#1b1e26] text-white border border-[rgba(3,232,249,0.3)] hover:border-[#03e8f9] hover:text-[#03e8f9] disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={uploading}
             >
               취소
             </button>
             <button
               type="submit"
-              className={styles.submitButton}
+              className="px-8 py-3 rounded-lg font-bold cursor-pointer transition-all duration-300 border-none text-base bg-[#03e8f9] text-[#050a13] hover:bg-transparent hover:text-[#03e8f9] hover:border hover:border-[#03e8f9] disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={uploading || !title || !content}
             >
               {uploading ? '저장 중...' : '저장하기'}

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { getPostsByTagPaginated } from '@/lib/blog'
 import { BlogPost } from '@/types/blog'
 import { QueryDocumentSnapshot } from 'firebase/firestore'
-import styles from './page.module.css'
 
 interface PostListProps {
   initialPosts: BlogPost[]
@@ -82,15 +81,15 @@ export default function PostList({ initialPosts, tag }: PostListProps) {
 
   return (
     <>
-      <div className={styles.posts}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-8">
         {posts.map((post) => (
           <Link 
             key={post.id} 
             href={`/blog/${encodeURIComponent(tag)}/${encodeURIComponent(post.slug || post.id || '')}`}
-            className={styles.postCard}
+            className="bg-[#1b1e26] p-8 rounded-2xl border border-[rgba(3,232,249,0.2)] transition-all duration-300 no-underline text-inherit block hover:border-[#03e8f9] hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(3,232,249,0.2)]"
           >
-            <h2 className={styles.postTitle}>{post.title}</h2>
-            <p className={styles.postDate}>
+            <h2 className="text-2xl mb-4 text-white">{post.title}</h2>
+            <p className="text-sm text-[#03e8f9] mb-4">
               {(() => {
                 const date = post.createdAt instanceof Date 
                   ? post.createdAt 
@@ -106,13 +105,13 @@ export default function PostList({ initialPosts, tag }: PostListProps) {
       
       {/* 스크롤 감지용 요소 */}
       {hasMore && (
-        <div ref={observerRef} className={styles.observer}>
-          {loading && <p className={styles.loading}>로딩 중...</p>}
+        <div ref={observerRef} className="h-25 flex items-center justify-center mt-8">
+          {loading && <p className="text-[#03e8f9] text-base text-center">로딩 중...</p>}
         </div>
       )}
       
       {!hasMore && posts.length > 0 && (
-        <p className={styles.noMore}>더 이상 포스트가 없습니다.</p>
+        <p className="text-white/60 text-base text-center mt-12 p-8">더 이상 포스트가 없습니다.</p>
       )}
     </>
   )
