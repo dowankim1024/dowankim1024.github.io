@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
-import { getPostBySlug } from '@/lib/blog'
+import Link from 'next/link'
+import { getPostBySlug, getPostsByTag } from '@/lib/blog'
 import ReactMarkdown, { Components } from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
@@ -17,11 +18,21 @@ interface PageProps {
 
 export default async function BlogPostPage({ params }: PageProps) {
   const decodedSlug = decodeURIComponent(params.slug)
+  const decodedTag = decodeURIComponent(params.tag)
   const post = await getPostBySlug(decodedSlug)
 
   if (!post) {
     notFound()
   }
+
+  // 같은 태그의 모든 포스트 가져오기 (이전/다음 포스트 찾기용)
+  const allPosts = await getPostsByTag(decodedTag)
+  const currentIndex = allPosts.findIndex(p => p.id === post.id || p.slug === post.slug)
+  
+  // 이전 포스트 (더 최신 포스트, 인덱스가 작음)
+  const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
+  // 다음 포스트 (더 오래된 포스트, 인덱스가 큼)
+  const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
 
   return (
     <>
@@ -52,6 +63,40 @@ export default async function BlogPostPage({ params }: PageProps) {
             </div>
           )}
         </header>
+        
+        {/* 상단 네비게이션 */}
+        {(prevPost || nextPost) && (
+          <nav className={styles.navigation}>
+            {prevPost ? (
+              <Link 
+                href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(prevPost.slug || prevPost.id || '')}`}
+                className={styles.navButton}
+              >
+                <span className={styles.navArrow}>←</span>
+                <div className={styles.navContent}>
+                  <span className={styles.navLabel}>이전 글</span>
+                  <span className={styles.navTitle}>{prevPost.title}</span>
+                </div>
+              </Link>
+            ) : (
+              <div className={styles.navButton} style={{ visibility: 'hidden' }}></div>
+            )}
+            {nextPost ? (
+              <Link 
+                href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(nextPost.slug || nextPost.id || '')}`}
+                className={styles.navButton}
+              >
+                <div className={styles.navContent}>
+                  <span className={styles.navLabel}>다음 글</span>
+                  <span className={styles.navTitle}>{nextPost.title}</span>
+                </div>
+                <span className={styles.navArrow}>→</span>
+              </Link>
+            ) : (
+              <div className={styles.navButton} style={{ visibility: 'hidden' }}></div>
+            )}
+          </nav>
+        )}
         
         <div className={styles.content}>
           <ReactMarkdown
@@ -96,6 +141,40 @@ export default async function BlogPostPage({ params }: PageProps) {
             {post.content}
           </ReactMarkdown>
         </div>
+        
+        {/* 하단 네비게이션 */}
+        {(prevPost || nextPost) && (
+          <nav className={styles.navigation}>
+            {prevPost ? (
+              <Link 
+                href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(prevPost.slug || prevPost.id || '')}`}
+                className={styles.navButton}
+              >
+                <span className={styles.navArrow}>←</span>
+                <div className={styles.navContent}>
+                  <span className={styles.navLabel}>이전 글</span>
+                  <span className={styles.navTitle}>{prevPost.title}</span>
+                </div>
+              </Link>
+            ) : (
+              <div className={styles.navButton} style={{ visibility: 'hidden' }}></div>
+            )}
+            {nextPost ? (
+              <Link 
+                href={`/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(nextPost.slug || nextPost.id || '')}`}
+                className={styles.navButton}
+              >
+                <div className={styles.navContent}>
+                  <span className={styles.navLabel}>다음 글</span>
+                  <span className={styles.navTitle}>{nextPost.title}</span>
+                </div>
+                <span className={styles.navArrow}>→</span>
+              </Link>
+            ) : (
+              <div className={styles.navButton} style={{ visibility: 'hidden' }}></div>
+            )}
+          </nav>
+        )}
       </div>
       </article>
     </>

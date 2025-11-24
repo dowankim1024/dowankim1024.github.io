@@ -208,3 +208,85 @@
   color: #03e8f9;
 }
 
+/* 네비게이션 스타일 */
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 3rem 0;
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(3, 232, 249, 0.2);
+  border-bottom: 1px solid rgba(3, 232, 249, 0.2);
+}
+
+/* 상단 네비게이션은 border-top 제거 (header의 border-bottom이 이미 있음) */
+.header + .navigation {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background-color: rgba(3, 232, 249, 0.05);
+  border: 1px solid rgba(3, 232, 249, 0.2);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  flex: 1;
+  max-width: 48%;
+}
+
+.navButton:hover {
+  background-color: rgba(3, 232, 249, 0.1);
+  border-color: #03e8f9;
+  transform: translateY(-2px);
+}
+
+.navButton:first-child {
+  text-align: left;
+}
+
+.navButton:last-child {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.navArrow {
+  font-size: 1.5rem;
+  color: #03e8f9;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.navContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.navLabel {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.navTitle {
+  font-size: 1rem;
+  color: #ffffff;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navButton:last-child .navContent {
+  text-align: right;
+}
+
