@@ -1,27 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Home.module.css'
 import { socialLinks } from './Home.constants'
 
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [opacity, setOpacity] = useState(1)
-
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-
-    const handleScroll = () => {
-      const homeHeight = container.offsetHeight
-      setOpacity(1 - window.scrollY / homeHeight)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -33,7 +17,7 @@ export default function Home() {
 
   return (
     <section id="home" className={styles.section}>
-      <div className={styles.container} ref={containerRef} style={{ opacity }}>
+      <div className={styles.container}>
         <Image
           className={styles.avatar}
           src="/images/projects/prof.jpeg"
