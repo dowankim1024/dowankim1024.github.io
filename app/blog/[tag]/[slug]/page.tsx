@@ -72,6 +72,13 @@ export default async function BlogPostPage({ params }: PageProps) {
                       style={vscDarkPlus}
                       language={language}
                       PreTag="div"
+                      customStyle={{
+                        background: 'transparent',
+                        padding: 0,
+                        margin: 0,
+                        border: 'none',
+                        boxShadow: 'none',
+                      }}
                     >
                       {String(children).replace(/\n$/, '')}
                     </SyntaxHighlighter>

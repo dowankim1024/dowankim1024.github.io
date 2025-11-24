@@ -1287,6 +1287,214 @@ useEffect(() => {
 - 작업 효율성 향상: 파일 선택 다이얼로그를 열 필요 없음
 - 자연스러운 워크플로우: 일반적인 문서 편집기처럼 작동
 
+### 12. 코드 블록 배경색 및 패딩 영역 스타일 제거 문제
+
+**문제**: 블로그 글의 코드 블록에 다음과 같은 스타일 문제가 발생했습니다:
+1. 코드 블록 안쪽에 푸른색 보더라인이 표시됨
+2. 패딩 영역에 배경색(`#1e1e1e`)이 적용되어 깔끔하지 않음
+3. `react-syntax-highlighter`가 인라인 스타일로 배경색과 패딩을 적용하여 CSS로 제어가 어려움
+
+**원인**:
+- `react-syntax-highlighter`의 `SyntaxHighlighter` 컴포넌트가 최상위 `div` 요소에 인라인 스타일로 `background: #1e1e1e`, `padding: 1em`, `margin: 0.5em 0` 등을 적용
+- 인라인 스타일은 CSS의 `!important`로도 완전히 오버라이드할 수 없음
+- 라이브러리가 생성하는 내부 요소들(`div`, `code`, `span` 등)에도 배경색과 테두리가 적용됨
+
+**해결 방법**:
+1. **CSS에서 모든 내부 요소의 스타일 제거**: `!important`를 사용하여 라이브러리 기본 스타일 강제 제거
+2. **`customStyle` prop 사용**: `SyntaxHighlighter` 컴포넌트의 `customStyle` prop을 사용하여 인라인 스타일 오버라이드
+3. **모든 하위 요소 타겟팅**: `*`, `::before`, `::after` 선택자를 사용하여 모든 요소와 가상 요소의 스타일 제거
+
+**사용 기술**:
+- CSS `!important`: 우선순위가 높은 스타일 적용
+- `customStyle` prop: `react-syntax-highlighter`의 인라인 스타일 오버라이드
+- CSS 선택자: `*`, `::before`, `::after`를 사용한 포괄적 스타일 제거
+
+**구현 코드**:
+
+**1. TypeScript/React 코드 (`page.tsx`)**:
+```typescript
+<SyntaxHighlighter
+  style={vscDarkPlus}
+  language={language}
+  PreTag="div"
+  customStyle={{
+    background: 'transparent',
+    padding: 0,
+    margin: 0,
+    border: 'none',
+    boxShadow: 'none',
+  }}
+>
+  {String(children).replace(/\n$/, '')}
+</SyntaxHighlighter>
+```
+
+**2. CSS 코드 (`page.module.css`)**:
+```css
+/* react-syntax-highlighter 스타일 오버라이드 */
+.content pre[class*="language-"] {
+  margin-bottom: 1.5rem;
+  border-radius: 0;
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* react-syntax-highlighter 내부 요소 스타일 제거 */
+.content pre[class*="language-"] > div {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* react-syntax-highlighter 내부 모든 요소의 border 제거 */
+.content pre[class*="language-"] *,
+.content pre[class*="language-"] *::before,
+.content pre[class*="language-"] *::after {
+  border: none !important;
+  border-width: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+/* react-syntax-highlighter의 code 태그 내부 요소 */
+.content pre[class*="language-"] code,
+.content pre[class*="language-"] code *,
+.content pre[class*="language-"] code *::before,
+.content pre[class*="language-"] code *::after {
+  border: none !important;
+  border-width: 0 !important;
+  outline: none !important;
+  background-color: transparent !important;
+}
+
+/* react-syntax-highlighter의 span 요소들 */
+.content pre[class*="language-"] span,
+.content pre[class*="language-"] span * {
+  border: none !important;
+  border-width: 0 !important;
+  outline: none !important;
+  background-color: transparent !important;
+}
+```
+
+**핵심 포인트**:
+
+1. **인라인 스타일과 CSS 우선순위**:
+   - CSS 우선순위 규칙: **인라인 스타일 > `!important` (클래스) > 클래스 선택자 > 태그 선택자**
+   - `react-syntax-highlighter`는 최상위 `div`에 인라인 스타일(`style="background: #1e1e1e; padding: 1em;"`)을 적용합니다.
+   - CSS 클래스에 `!important`를 사용해도 인라인 스타일보다 우선순위가 낮아 오버라이드할 수 없습니다.
+
+2. **`customStyle` prop이 인라인 스타일을 오버라이드하는 원리**:
+   - `customStyle` prop은 라이브러리가 인라인 스타일을 생성할 때 사용하는 값입니다.
+   - 라이브러리 내부에서 다음과 같이 동작합니다:
+     ```javascript
+     // 라이브러리 내부 로직 (의사 코드)
+     const defaultStyle = {
+       background: '#1e1e1e',
+       padding: '1em',
+       margin: '0.5em 0',
+     }
+     
+     const finalStyle = {
+       ...defaultStyle,  // 기본 스타일
+       ...customStyle,   // 우리가 전달한 customStyle (나중에 적용되어 덮어씀)
+     }
+     
+     // 최종적으로 인라인 스타일로 적용
+     <div style={finalStyle}>
+     ```
+   - `customStyle`의 값이 기본 스타일을 덮어쓰므로, 인라인 스타일이 생성될 때 우리가 원하는 값으로 적용됩니다.
+   - 결과적으로 인라인 스타일이 우리가 원하는 값으로 생성되므로, CSS로 제어할 필요가 없습니다.
+
+3. **CSS `!important`의 역할**:
+   - `customStyle`은 최상위 `div`에만 적용되므로, 내부의 `code`, `span` 등 하위 요소는 여전히 라이브러리 기본 스타일이 적용됩니다.
+   - 하위 요소들의 스타일을 제거하려면 CSS의 `!important`를 사용해야 합니다.
+   - 하위 요소에는 인라인 스타일이 없거나, 있더라도 CSS `!important`로 오버라이드할 수 있습니다.
+
+4. **포괄적 선택자 사용**: `*` 선택자를 사용하여 모든 하위 요소를 타겟팅하고, `::before`, `::after` 가상 요소도 포함하여 완전한 스타일 제거를 보장합니다.
+
+5. **배경색과 패딩 동시 제거**: `background-color`와 `background` 속성을 모두 `transparent`로 설정하고, `padding`과 `margin`을 `0`으로 설정하여 불필요한 공간과 색상을 제거합니다.
+
+**결과**:
+- 코드 블록의 배경색이 완전히 제거되어 투명하게 표시됨
+- 패딩과 마진 영역의 색상이 사라져 깔끔한 디자인 구현
+- 불필요한 테두리와 그림자가 모두 제거됨
+- 코드 하이라이팅 기능은 유지되면서 스타일만 제거됨
+
+**주의사항**:
+- `customStyle` prop은 `SyntaxHighlighter` 컴포넌트에만 적용되므로, 다른 스타일링 라이브러리를 사용할 때는 해당 라이브러리의 API를 확인해야 합니다.
+- `!important`를 과도하게 사용하면 유지보수가 어려워질 수 있으므로, 필요한 경우에만 사용하는 것이 좋습니다.
+
+**다른 라이브러리에서 인라인 스타일 오버라이드 방법**:
+
+일반적으로 라이브러리의 인라인 스타일을 오버라이드하는 방법은 다음과 같습니다:
+
+1. **라이브러리가 제공하는 prop/옵션 사용 (권장)**:
+   - 라이브러리가 `customStyle`, `style`, `theme` 등의 prop을 제공하는 경우 사용
+   - 예: `react-syntax-highlighter`의 `customStyle` prop
+
+2. **CSS `!important` 사용 (인라인 스타일에는 효과 없음)**:
+   - ⚠️ 중요: 인라인 스타일(`style="..."`)은 CSS `!important`로도 오버라이드할 수 없습니다.
+   - CSS 우선순위: 인라인 스타일 > `!important` (클래스) > 클래스 선택자 > 태그 선택자
+   - 따라서 인라인 스타일이 있는 경우 CSS만으로는 해결할 수 없습니다.
+
+3. **JavaScript로 DOM 직접 조작 (런타임)**:
+   - 라이브러리가 prop을 제공하지 않는 경우 JavaScript로 직접 제거
+   ```typescript
+   useEffect(() => {
+     const element = document.querySelector('.library-element')
+     if (element) {
+       element.style.background = 'transparent'
+       element.style.padding = '0'
+     }
+   }, [])
+   ```
+
+4. **CSS 변수 사용 (일부 라이브러리 지원)**:
+   - 일부 라이브러리는 CSS 변수를 통해 테마를 커스터마이징할 수 있습니다.
+
+5. **라이브러리 포크/수정**:
+   - 극단적인 경우, 라이브러리를 포크해서 직접 수정하거나 다른 라이브러리로 교체
+
+**실제 상황별 해결 방법**:
+
+- **Case 1: 라이브러리가 `customStyle` 같은 prop 제공**
+  ```jsx
+  // ✅ 가장 쉬운 방법
+  <Component customStyle={{ background: 'transparent' }} />
+  ```
+
+- **Case 2: 라이브러리가 `style` prop 제공**
+  ```jsx
+  // ✅ 작동할 수도 있음 (라이브러리마다 다름)
+  <Component style={{ background: 'transparent' }} />
+  ```
+
+- **Case 3: 라이브러리가 아무것도 제공하지 않음**
+  ```jsx
+  // ⚠️ JavaScript로 직접 조작해야 함
+  useEffect(() => {
+    const element = document.querySelector('.library-element')
+    if (element) {
+      element.style.background = 'transparent'
+    }
+  }, [])
+  ```
+
+**결론**:
+- 인라인 스타일은 CSS만으로는 오버라이드할 수 없습니다.
+- 가장 좋은 방법: 라이브러리가 제공하는 prop/옵션 사용
+- 대안: JavaScript로 DOM 직접 조작
+- 최후의 수단: 라이브러리 포크/수정 또는 다른 라이브러리 사용
+
 ## 📝 라이선스
 
 이 프로젝트는 개인 포트폴리오 용도로 제작되었습니다.

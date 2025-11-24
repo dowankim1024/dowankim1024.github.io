@@ -112,9 +112,11 @@
 .content pre[class*="language-"] {
   margin-bottom: 1.5rem;
   border-radius: 0;
-  border: none;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: none !important;
   background-color: transparent !important;
+  background: transparent !important;
+  padding: 0 !important;
 }
 
 .content pre[class*="language-"] code {
@@ -126,6 +128,42 @@
 .content pre[class*="language-"] > div {
   box-shadow: none !important;
   border: none !important;
+  outline: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* react-syntax-highlighter 내부 모든 요소의 border 제거 */
+.content pre[class*="language-"] *,
+.content pre[class*="language-"] *::before,
+.content pre[class*="language-"] *::after {
+  border: none !important;
+  border-width: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+/* react-syntax-highlighter의 code 태그 내부 요소 */
+.content pre[class*="language-"] code,
+.content pre[class*="language-"] code *,
+.content pre[class*="language-"] code *::before,
+.content pre[class*="language-"] code *::after {
+  border: none !important;
+  border-width: 0 !important;
+  outline: none !important;
+  background-color: transparent !important;
+}
+
+/* react-syntax-highlighter의 span 요소들 */
+.content pre[class*="language-"] span,
+.content pre[class*="language-"] span * {
+  border: none !important;
+  border-width: 0 !important;
+  outline: none !important;
+  background-color: transparent !important;
 }
 
 .content blockquote {
