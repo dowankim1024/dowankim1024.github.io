@@ -43,7 +43,7 @@ export default function WritePostPage() {
     setImages(images.filter((_, i) => i !== index))
   }
 
-  // 클립보드 이미지 붙여넣기 처리
+  // 클립보드 이미지/비디오 붙여넣기 처리
   useEffect(() => {
     const handlePaste = async (e: ClipboardEvent) => {
       const items = e.clipboardData?.items
@@ -51,7 +51,10 @@ export default function WritePostPage() {
 
       for (let i = 0; i < items.length; i++) {
         const item = items[i]
-        if (item.type.indexOf('image') !== -1) {
+        const isImage = item.type.indexOf('image') !== -1
+        const isVideo = item.type.indexOf('video') !== -1
+        
+        if (isImage || isVideo) {
           e.preventDefault()
           const file = item.getAsFile()
           if (!file) continue
@@ -64,12 +67,18 @@ export default function WritePostPage() {
               return
             }
 
-            // 임시 ID로 이미지 업로드
+            // 임시 ID로 파일 업로드
             const tempId = `temp_${Date.now()}`
-            const imageUrl = await uploadImage(file, tempId)
+            const fileUrl = await uploadImage(file, tempId)
             
-            // 마크다운 형식으로 삽입
-            const imageMarkdown = `\n![${file.name}](${imageUrl})\n`
+            // 이미지 또는 비디오에 따라 다른 형식으로 삽입
+            let markdown = ''
+            if (isImage) {
+              markdown = `\n![${file.name}](${fileUrl})\n`
+            } else {
+              // HTML video 태그 사용 (rehype-raw가 HTML을 지원하므로)
+              markdown = `\n<video controls width="100%">\n  <source src="${fileUrl}" type="${item.type}">\n  Your browser does not support the video tag.\n</video>\n`
+            }
             
             // MDEditor 내부의 textarea에서 커서 위치 가져오기
             let cursorPos = content.length
@@ -80,10 +89,10 @@ export default function WritePostPage() {
               }
             }
             
-            const newContent = content.slice(0, cursorPos) + imageMarkdown + content.slice(cursorPos)
+            const newContent = content.slice(0, cursorPos) + markdown + content.slice(cursorPos)
             setContent(newContent)
             
-            // 이미지 목록에도 추가
+            // 이미지 목록에도 추가 (비디오도 포함)
             setImages([...images, file])
             
             // 커서 위치 업데이트 (비동기로 처리)
@@ -91,15 +100,15 @@ export default function WritePostPage() {
               if (editorRef.current) {
                 const textarea = editorRef.current.querySelector('textarea') as HTMLTextAreaElement
                 if (textarea) {
-                  const newCursorPos = cursorPos + imageMarkdown.length
+                  const newCursorPos = cursorPos + markdown.length
                   textarea.setSelectionRange(newCursorPos, newCursorPos)
                   textarea.focus()
                 }
               }
             }, 0)
           } catch (err) {
-            console.error('이미지 업로드 실패:', err)
-            alert('이미지 업로드에 실패했습니다.')
+            console.error('파일 업로드 실패:', err)
+            alert(`${isImage ? '이미지' : '비디오'} 업로드에 실패했습니다.`)
           } finally {
             setUploadingImage(false)
           }
@@ -210,9 +219,9 @@ export default function WritePostPage() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label htmlFor="content">내용 (마크다운)</label>
+            <label>내용 (마크다운)</label>
             {uploadingImage && (
-              <p className={styles.uploading}>이미지 업로드 중...</p>
+              <p className={styles.uploading}>파일 업로드 중...</p>
             )}
             <div 
               ref={editorRef}
@@ -223,7 +232,8 @@ export default function WritePostPage() {
                 if (nativeEvent.clipboardData) {
                   const items = nativeEvent.clipboardData.items
                   for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.indexOf('image') !== -1) {
+                    const item = items[i]
+                    if (item.type.indexOf('image') !== -1 || item.type.indexOf('video') !== -1) {
                       e.preventDefault()
                       break
                     }
@@ -265,12 +275,12 @@ export default function WritePostPage() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label htmlFor="images">이미지 업로드</label>
+            <label htmlFor="images">이미지/비디오 업로드</label>
             <input
               id="images"
               type="file"
               multiple
-              accept="image/*"
+              accept="image/*,video/*"
               onChange={handleImageUpload}
               disabled={uploading}
               className={styles.fileInput}
@@ -294,8 +304,10 @@ export default function WritePostPage() {
           </div>
 
           <div className={styles.checkboxGroup}>
-            <label>
+            <label htmlFor="published">
               <input
+                id="published"
+                name="published"
                 type="checkbox"
                 checked={published}
                 onChange={(e) => setPublished(e.target.checked)}
