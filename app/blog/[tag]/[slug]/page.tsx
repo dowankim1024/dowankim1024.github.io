@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPostBySlug, getPostsByTag } from '@/lib/blog'
@@ -8,10 +9,82 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import Header from '@/components/Home/Header/Header'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dowankim.site'
+const defaultOgImage = `${siteUrl}/images/og.webp`
+
 interface PageProps {
   params: {
     tag: string
     slug: string
+  }
+}
+
+const stripMarkdown = (markdown: string): string =>
+  markdown
+    .replace(/```[\s\S]*?```/g, ' ') // 코드블럭 제거
+    .replace(/`[^`]*`/g, ' ') // 인라인 코드 제거
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ') // 이미지
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // 링크 -> 텍스트만
+    .replace(/[#>*_~\-\+]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const ensureAbsoluteUrl = (imageUrl: string): string =>
+  imageUrl.startsWith('http') ? imageUrl : `${siteUrl}${imageUrl}`
+
+const toDate = (value: Date | { toDate: () => Date }): Date =>
+  value instanceof Date ? value : value.toDate()
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const decodedSlug = decodeURIComponent(params.slug)
+  const decodedTag = decodeURIComponent(params.tag)
+  const post = await getPostBySlug(decodedSlug)
+
+  if (!post) {
+    return {
+      title: '게시글을 찾을 수 없습니다',
+      description: '요청한 블로그 글이 존재하지 않습니다.',
+    }
+  }
+
+  const plain = stripMarkdown(post.content)
+  const description =
+    plain.length > 160 ? `${plain.slice(0, 157).trim()}...` : plain || post.title
+  const primaryImage = post.images?.[0] ? ensureAbsoluteUrl(post.images[0]) : defaultOgImage
+  const canonicalUrl = `${siteUrl}/blog/${encodeURIComponent(decodedTag)}/${encodeURIComponent(
+    decodedSlug
+  )}`
+  const createdAtDate = toDate(post.createdAt as Date | { toDate: () => Date })
+
+  return {
+    title: post.title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Dowan Kim Portfolio',
+      images: [
+        {
+          url: primaryImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      tags: post.tags,
+      publishedTime: createdAtDate.toISOString(),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+      images: [primaryImage],
+    },
   }
 }
 

@@ -1944,23 +1944,55 @@ const goToSlide = (index: number) => {
 - 새 도메인(`dowankim.site`)은 구글에 “이 도메인을 인덱싱해도 된다”는 신호를 아직 주지 않은 상태
 - Search Console에 소유권 인증이 없으면 구글봇이 사이트를 적극적으로 방문하지 않음
 
-#### 3) 해결 과정
-1. **Google Search Console에 도메인 등록**
-   - “도메인(권장)” 옵션 선택 → DNS TXT 레코드 방식으로 소유권 인증
-2. **가비아 DNS에 TXT 레코드 추가**
-   - 타입: `TXT`
-   - 호스트: `@` (루트 도메인 전체를 의미)
-   - 값: `google-site-verification=XXXX` (서치 콘솔이 제공한 문자열을 그대로 사용)
-   - TTL: 기본값 600초 유지
-   - 저장 후 수 분~수 시간 전파를 기다림
-3. **Search Console에서 인증 확인**
-   - “확인” 버튼을 눌러 TXT 레코드가 전파되었는지 검증
-   - 실패 시 10~15분 간격으로 재시도
-4. **사이트맵/robots 제출**
-   - `sitemap.xml`, `robots.txt`를 구성하고 Search Console에 제출
-   - Next.js App Router라면 `app/sitemap.ts`, `app/robots.ts` 활용 가능
-5. **메타데이터·OG 태그 점검**
-   - 페이지별 `metadata`에 `title`, `description`, `openGraph` 정보를 채워 검색엔진이 콘텐츠를 이해하도록 보강
+#### 3) 해결 과정 (실제 헤맨 기록 포함)
+1. **Search Console 도메인 속성 생성**
+   - “도메인(권장)” 옵션 선택 → TXT 레코드 인증 필요
+2. **잘못된 시도: 가비아 DNS에 TXT 입력**
+   - 루트 도메인 네임서버를 Vercel로 변경한 상태였는데도, 습관적으로 가비아 DNS 화면에 `google-site-verification=...` TXT를 먼저 추가
+   - 하지만 가비아는 단순한 도메인 등록처로만 사용 중이고, 실제 DNS는 `ns1.vercel-dns.com`이 관리 → Search Console에서 계속 “소유권 확인 실패”
+3. **원인 파악**
+   - 네임서버가 Vercel이므로 TXT 레코드도 Vercel Dashboard의 DNS Records에 추가해야 함을 인지
+4. **정상 시도: Vercel DNS에 TXT 추가**
+   - `Domains > dowankim.site > DNS Records`에서 **Type=TXT**, **Name=@**, **Value=google-site-verification=...**, TTL 기본값 60으로 등록
+   - 5~10분 후 Search Console에서 “확인” 재시도 → 소유권 인증 성공
+5. **크롤링 안내 파일 준비**
+   - `app/sitemap.ts` 작성 → `/sitemap.xml` 경로 자동 생성. 프로젝트, 블로그, 연락처 기본 경로를 포함
+   - `app/robots.ts` 작성 → `/robots.txt` 자동 생성. 모든 User-agent에 `allow: /`, `sitemap` 경로 명시
+6. **Search Console에 사이트맵 제출**
+   - 왼쪽 메뉴 `Sitemaps` > `https://dowankim.site/sitemap.xml` 입력 후 제출 → “성공” 확인
+7. **메타데이터·OG 태그 정비**
+   - 왜 필요한가?
+     - 이전 GitHub Pages용 메타 태그가 그대로라 새 도메인 정보가 검색/SNS에 전달되지 않았음
+     - `og:image`, `description`이 오래된 URL을 가리켜 공유 시 잘못된 썸네일 노출
+   - 어떻게 했나?
+     1. `app/layout.tsx`  
+        - `metadataBase`를 `https://dowankim.site`로 지정  
+        - `title` 템플릿, `description`, `keywords`, `openGraph`, `twitter` 정보를 새 URL/이미지(`images/og.webp`)로 갱신  
+        - `NEXT_PUBLIC_SITE_URL` 환경변수를 활용해 로컬·배포 모두 동일한 코드를 사용
+     2. `app/blog/[tag]/[slug]/page.tsx`  
+        - `generateMetadata` 함수에서 포스트 데이터를 조회  
+        - 마크다운을 텍스트로 정제해 160자 내외 `description` 생성  
+        - 대표 이미지가 있으면 절대 경로로 변환, 없으면 기본 OG 이미지 사용  
+        - `canonical` URL, `openGraph.article` 정보(태그, 발행일)까지 동적으로 주입
+   - 효과
+     - 검색엔진/크롤러가 최신 도메인과 페이지 정보를 정확히 인식  
+     - SNS 공유 시 올바른 제목·설명·썸네일이 노출돼 클릭률 개선 기대
+8. **메타데이터 & OG 기본 개념 메모**
+   - 메타데이터란?
+     - HTML `<head>` 내에서 페이지를 설명하는 정보 세트
+     - 예: `<title>`, `<meta name="description">`, `<link rel="canonical">`, `<meta name="robots">`
+     - 검색엔진이 색인할 때 제목·요약·원본 URL을 이해하는 데 사용
+   - OG(Open Graph)란?
+     - Facebook이 만든 공유 미리보기 표준, 대부분의 SNS가 참고
+     - `og:title`, `og:description`, `og:image`, `og:url`, `article:published_time` 등
+     - 없으면 잘못된 썸네일/텍스트가 노출되어 클릭률 저하
+   - 이번 프로젝트에서의 적용 포인트
+     1. `app/layout.tsx`에서 전역 기본값 정의 (제목 템플릿, 설명, OG/Twitter 이미지)
+     2. `generateMetadata`로 페이지별(특히 블로그 글) 맞춤 메타 정보 생성
+     3. `.env.local` 및 Vercel 환경 변수에 `NEXT_PUBLIC_SITE_URL`을 지정해 동일한 코드로 로컬·배포 모두 처리
+   - 기억할 것
+     - 메타데이터를 수정하면 로컬 개발 서버나 배포를 다시 실행해야 적용됨
+     - 새 페이지를 만들 때도 `generateMetadata` 혹은 `metadata` export를 함께 고려할 것
 
 #### 4) 결과
 - DNS TXT 인증 이후 Search Console에서 인덱싱을 요청할 수 있게 되었고, 구글 크롤러가 새 도메인을 방문하기 시작
