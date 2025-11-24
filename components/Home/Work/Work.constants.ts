@@ -45,13 +45,6 @@ export const projects: Project[] = [
   },
   {
     type: 'front-end',
-    href: '#',
-    img: '/images/projects/pf.webp',
-    title: 'Portfolio Site',
-    description: "Dowan Kim's Portfolio Site",
-  },
-  {
-    type: 'front-end',
     href: 'https://cheerful-cascaron-6f7a7d.netlify.app/',
     img: '/images/projects/todo.webp',
     title: 'TODO-LIST',
@@ -122,13 +115,6 @@ export const projects: Project[] = [
   },
   {
     type: 'design',
-    href: 'https://www.instagram.com/tv/CVeW3gDBHqb/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
-    img: '/images/projects/Mayapj.webp',
-    title: 'Inside movie',
-    description: 'Inside movie using Maya',
-  },
-  {
-    type: 'design',
     href: 'https://www.instagram.com/tv/CVno2wcB-EB/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
     img: '/images/projects/unity3.webp',
     title: 'VR contentes#3',
@@ -150,50 +136,14 @@ export const projects: Project[] = [
   },
   {
     type: 'design',
-    href: 'https://www.instagram.com/tv/CXvhbHslRyH/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
-    img: '/images/projects/mayaclock.webp',
-    title: 'Clock movie',
-    description: 'MAYA CLOCK ANIMATION(PLAYBLAST)',
-  },
-  {
-    type: 'design',
-    href: 'https://www.instagram.com/p/Cx8E8r3Lyzq/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
-    img: '/images/projects/blender.webp',
-    title: '3D Poster',
-    description: '3D poster using Blender',
-  },
-  {
-    type: 'design',
-    href: 'https://www.instagram.com/p/Cx8lLs_yr_4/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
-    img: '/images/projects/blender2.webp',
-    title: '3D Material',
-    description: '3D Material using Blender',
-  },
-  {
-    type: 'design',
     href: 'https://www.instagram.com/p/CyJBlporwoo/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
     img: '/images/projects/poca.webp',
     title: 'POCARI SWEAT',
     description: 'POCARI SWEAT using Blender',
   },
-  {
-    type: 'design',
-    href: 'https://www.instagram.com/reel/CyLSwuCR9GN/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
-    img: '/images/projects/ip.webp',
-    title: 'IPHONE 3D GRAPHIC',
-    description: 'IPHONE 3D GRAPHIC using Blender',
-  },
-  {
-    type: 'design',
-    href: 'https://www.instagram.com/reel/CyTKqGHR9cU/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
-    img: '/images/projects/3d.webp',
-    title: '3D GRAPHIC',
-    description: '3D GRAPHIC using Blender',
-  },
 ]
 
 export const categories: Category[] = [
-  { id: 'all', label: 'All', count: 25 },
   { id: 'front-end', label: 'Front-end', count: 7 },
   { id: 'design', label: 'Design', count: 16 },
   { id: 'plan', label: 'Plan', count: 2 },

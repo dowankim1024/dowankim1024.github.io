@@ -4,9 +4,37 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { categories, projects } from './Work.constants'
+import FeaturedCarousel from './FeaturedCarousel'
+
+const featuredProjects = [
+  {
+    href: 'https://dt.pusan.ac.kr/pages/DT_page/DT_016_page/#/about',
+    img: '/images/projects/Graduate.webp',
+    title: '2025 PNU Design&Technology Graduate Website',
+    description: 'Designer(SeEun Park), Developer(DoWan Kim)',
+  },
+  {
+    href: 'https://to-infinity-2025-design-technology.vercel.app',
+    img: '/images/projects/Infinity.webp',
+    title: 'INFINITY 2025 DT Graduate Personal Project',
+    description: 'INFINITY-Interative Design Artwork using Three.js',
+  },
+  {
+    href: 'https://flower-text-fill.vercel.app/',
+    img: '/images/projects/flowertext.webp',
+    title: 'Interactive Guest Book',
+    description: 'Designer(SeEun Park), Developer(DoWan Kim)',
+  },
+  {
+    href: 'http://egemoney.co.kr/',
+    img: '/images/projects/egemnoey.webp',
+    title: 'Egemoney, Economics Quiz App',
+    description: 'KaKaoTechCampus PNU 1 Team',
+  },
+]
 
 export default function Work() {
-  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedCategory, setSelectedCategory] = useState('front-end')
   const [isAnimating, setIsAnimating] = useState(false)
 
   const handleCategoryClick = (categoryId: string) => {
@@ -29,23 +57,27 @@ export default function Work() {
       <div className="max-w-[1200px] mx-auto px-4 text-center">
         <h2 className="text-4xl my-4">My work</h2>
         <p className="text-2xl my-2">Projects</p>
+        {/* Featured 프로젝트 캐러셀 */}
+        <FeaturedCarousel projects={featuredProjects} />
+        
+        {/* 카테고리 버튼 */}
         <ul className="flex justify-center my-10 gap-4 flex-col md:flex-row md:[&_li]:flex-1 md:[&_li]:max-w-[200px]">
           {categories.map((category) => (
             <li key={category.id}>
               <button
-                className={`relative text-white text-lg px-4 py-2 rounded border border-[#03e8f9] cursor-pointer whitespace-nowrap bg-transparent transition-all duration-[250ms] w-full flex justify-center items-center ${
-                  selectedCategory === category.id ? 'bg-[#03e8f9] text-[#050a13]' : ''
+                className={`relative text-lg px-4 py-2 rounded border border-[#03e8f9] cursor-pointer whitespace-nowrap transition-all duration-[250ms] w-full flex justify-center items-center ${
+                  selectedCategory === category.id
+                    ? 'bg-[#03e8f9] text-[#050a13]'
+                    : 'bg-transparent text-white hover:bg-[#03e8f9]/20'
                 }`}
                 onClick={() => handleCategoryClick(category.id)}
               >
-                {category.label}{' '}
-                <span className={`opacity-0 absolute -top-5 right-4 w-7 h-7 leading-7 rounded-full bg-[#fd6413] text-white transition-all duration-[250ms] ${
-                  selectedCategory === category.id ? 'opacity-100 top-0' : ''
-                } group-hover:opacity-100 group-hover:top-0`}>{category.count}</span>
+                {category.label}
               </button>
             </li>
           ))}
         </ul>
+
         <ul className={`grid grid-cols-2 md:grid-cols-4 gap-4 transition-all duration-[250ms] ${
           isAnimating ? 'opacity-0 scale-[0.96] translate-y-5' : ''
         }`}>

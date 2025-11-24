@@ -1873,6 +1873,66 @@ useEffect(() => {
 - ✅ 네트워크 효율성: 필요한 만큼만 데이터 전송
 - ✅ 모바일 친화적: 페이지네이션 버튼보다 직관적
 
+### 15. Featured 프로젝트 캐러셀 자동 슬라이드 구현
+
+#### 1) 문제 상황
+- 한상곤 교수님이 사이트를 보시고 피드백으로, 프로젝트가 너무 많고, 너가 메인으로 삼고 싶은 프로젝트가 무엇인지 정하는게 좋다고 의견을 주심.
+- 이에 캐러셀을 통해 내가 당당하게 내밀고 싶은 프로젝트들을 사용자가 클릭하고 싶게 구현하고자 함.
+
+#### 2) 구현 코드 요약
+```tsx
+// components/Home/Work/FeaturedCarousel.tsx
+const [currentIndex, setCurrentIndex] = useState(0)
+const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+const intervalRef = useRef<NodeJS.Timeout | null>(null)
+
+useEffect(() => {
+  if (isAutoPlaying) {
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % projects.length)
+    }, 8000) // 8초 간격
+  }
+  return () => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+  }
+}, [isAutoPlaying, projects.length])
+
+const goToSlide = (index: number) => {
+  setCurrentIndex(index)
+  setIsAutoPlaying(false)
+  setTimeout(() => setIsAutoPlaying(true), 5000) // 5초 후 자동재생 재개
+}
+```
+
+#### 3) 구현 방식 이유
+- `setInterval`만 사용하면 수동 조작 직후 바로 다음 슬라이드로 넘어가는 문제가 발생 → `isAutoPlaying` 플래그로 제어
+- `useRef`에 interval ID를 저장해야 cleanup에서 정확히 `clearInterval` 가능
+- 수동 조작 시 자동 슬라이드를 잠시 멈추고 일정 시간 뒤 재개하면 UX가 자연스러움
+
+#### 4) 슬라이드 배치와 시각 효과
+```tsx
+<div className="flex transition-transform duration-500 ease-in-out"
+  style={{
+    transform: `translateX(calc(7.5% - ${currentIndex * 85}% - ${currentIndex * 3}rem))`,
+  }}
+>
+  {/* 슬라이드 */} 
+</div>
+```
+- 슬라이드 폭을 85%로 제한하고, `translateX`에 7.5% 오프셋을 줘 처음 진입 시에도 중앙 정렬
+- 현재 슬라이드 대비 옆 슬라이드를 `brightness-85`로 두어 “다음 컨텐츠가 있다”는 힌트 제공
+- gradient overlay와 hover 확대 효과로 시인성과 인터랙션 강화
+
+#### 5) 결과
+- 페이지 진입 직후부터 대표 프로젝트가 순환하며 시선을 끌어줌
+- 사용자 조작 직후에도 자동 슬라이드가 자연스럽게 재개
+- 좌우 버튼/인디케이터/peek 효과 덕분에 데스크톱·모바일 모두 직관적인 UI 완성
+
+#### 6) HCI
+- 자동 전환 주기는 3~5초가 가장 자연스러우나, 포플사이트 특성상 사용자가 자세하게 읽을 수 있게 8초 설정.
+- 수동 조작 후 재개 시간(5초)은 사용자 경험에 맞춰 조정 가능
+- 이미지가 너무 어두우면 `brightness`·gradient를 가볍게 조절해 시인성을 확보
+
 ## 📝 라이선스
 
 이 프로젝트는 개인 포트폴리오 용도로 제작되었습니다.
