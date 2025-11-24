@@ -1933,6 +1933,44 @@ const goToSlide = (index: number) => {
 - 수동 조작 후 재개 시간(5초)은 사용자 경험에 맞춰 조정 가능
 - 이미지가 너무 어두우면 `brightness`·gradient를 가볍게 조절해 시인성을 확보
 
+### 16. Next.js + Vercel 배포 후 구글 검색에 노출되지 않은 문제
+
+#### 1) 문제 상황
+- 기존 GitHub Pages로 배포한 정적 포트폴리오는 구글에서 바로 검색됨
+- 새로 만든 Next.js + Vercel 사이트는 아무리 검색해도 결과에 뜨지 않아 의문 발생
+
+#### 2) 원인 분석
+- GitHub Pages 버전은 오래 사용하면서 이미 크롤링·백링크가 쌓여 있음
+- 새 도메인(`dowankim.site`)은 구글에 “이 도메인을 인덱싱해도 된다”는 신호를 아직 주지 않은 상태
+- Search Console에 소유권 인증이 없으면 구글봇이 사이트를 적극적으로 방문하지 않음
+
+#### 3) 해결 과정
+1. **Google Search Console에 도메인 등록**
+   - “도메인(권장)” 옵션 선택 → DNS TXT 레코드 방식으로 소유권 인증
+2. **가비아 DNS에 TXT 레코드 추가**
+   - 타입: `TXT`
+   - 호스트: `@` (루트 도메인 전체를 의미)
+   - 값: `google-site-verification=XXXX` (서치 콘솔이 제공한 문자열을 그대로 사용)
+   - TTL: 기본값 600초 유지
+   - 저장 후 수 분~수 시간 전파를 기다림
+3. **Search Console에서 인증 확인**
+   - “확인” 버튼을 눌러 TXT 레코드가 전파되었는지 검증
+   - 실패 시 10~15분 간격으로 재시도
+4. **사이트맵/robots 제출**
+   - `sitemap.xml`, `robots.txt`를 구성하고 Search Console에 제출
+   - Next.js App Router라면 `app/sitemap.ts`, `app/robots.ts` 활용 가능
+5. **메타데이터·OG 태그 점검**
+   - 페이지별 `metadata`에 `title`, `description`, `openGraph` 정보를 채워 검색엔진이 콘텐츠를 이해하도록 보강
+
+#### 4) 결과
+- DNS TXT 인증 이후 Search Console에서 인덱싱을 요청할 수 있게 되었고, 구글 크롤러가 새 도메인을 방문하기 시작
+- GitHub Pages 대비 노출이 느린 이유(새 도메인, 링크 부족)를 명확히 이해하고, 인덱싱을 위한 최소 절차를 완료
+
+#### 5) 추가 팁
+- 인덱싱 요청 후 실제 검색 노출까지는 며칠~수주가 걸릴 수 있음
+- 외부 채널(Naver 블로그, GitHub README 등)에 새 도메인 링크를 걸어두면 크롤 빈도가 빨라짐
+- `noindex`, `canonical` 설정이 올바른지, `robots.txt`가 차단하고 있지 않은지 주기적으로 확인
+
 ## 📝 라이선스
 
 이 프로젝트는 개인 포트폴리오 용도로 제작되었습니다.
