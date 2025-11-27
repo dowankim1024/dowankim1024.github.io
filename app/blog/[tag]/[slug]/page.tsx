@@ -111,6 +111,24 @@ export default async function BlogPostPage({ params }: PageProps) {
       <Header />
       <article className="min-h-screen bg-[#050a13] text-white pt-32 px-4 pb-16">
         <div className="max-w-3xl mx-auto">
+        {/* 네비게이션 버튼 */}
+        <div className="mb-8 flex flex-col sm:flex-row gap-4">
+          <Link 
+            href="/blog"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(3,232,249,0.1)] border border-[rgba(3,232,249,0.2)] rounded-lg text-[#03e8f9] no-underline transition-all duration-300 hover:bg-[rgba(3,232,249,0.2)] hover:border-[#03e8f9] hover:-translate-y-0.5"
+          >
+            <span className="text-xl">←</span>
+            <span>프로젝트 목록으로</span>
+          </Link>
+          <Link 
+            href={`/blog/${encodeURIComponent(decodedTag)}`}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(3,232,249,0.1)] border border-[rgba(3,232,249,0.2)] rounded-lg text-[#03e8f9] no-underline transition-all duration-300 hover:bg-[rgba(3,232,249,0.2)] hover:border-[#03e8f9] hover:-translate-y-0.5"
+          >
+            <span className="text-xl">←</span>
+            <span>{decodedTag} 페이지로</span>
+          </Link>
+        </div>
+        
         <header className="mb-12 pb-8 border-b border-[rgba(3,232,249,0.2)]">
           <h1 className="text-4xl text-white mb-4">{post.title}</h1>
           <p className="text-base text-white/60 mb-4">
