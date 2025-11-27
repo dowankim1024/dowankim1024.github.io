@@ -125,7 +125,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(3,232,249,0.1)] border border-[rgba(3,232,249,0.2)] rounded-lg text-[#03e8f9] no-underline transition-all duration-300 hover:bg-[rgba(3,232,249,0.2)] hover:border-[#03e8f9] hover:-translate-y-0.5"
           >
             <span className="text-xl">←</span>
-            <span>{decodedTag} 페이지로</span>
+            <span>{decodedTag} 목록으로</span>
           </Link>
         </div>
         
