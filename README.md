@@ -2003,6 +2003,75 @@ const goToSlide = (index: number) => {
 - 외부 채널(Naver 블로그, GitHub README 등)에 새 도메인 링크를 걸어두면 크롤 빈도가 빨라짐
 - `noindex`, `canonical` 설정이 올바른지, `robots.txt`가 차단하고 있지 않은지 주기적으로 확인
 
+### 17. 새로운 프로젝트 태그가 블로그 페이지에 표시되지 않는 문제
+
+#### 1) 문제 상황
+- 어드민 페이지에서 새로운 태그로 프로젝트를 생성했는데, 어드민 페이지에는 보이지만 블로그 페이지(`/blog`)에는 표시되지 않음
+- 실제로 해당 태그로 공개된 포스트도 있고, 프로젝트 정보도 정상적으로 저장되어 있음
+
+#### 2) 원인 분석
+- `getAllTags()` 함수가 공개된 포스트(`getPublishedPosts()`)에서만 태그를 추출하고 있었음
+- 프로젝트 컬렉션(`projects`)에 등록된 태그는 포함하지 않았음
+- 따라서 프로젝트는 생성되었지만, 해당 태그로 작성된 포스트가 없거나 아직 반영되지 않은 경우 블로그 페이지에 표시되지 않음
+
+#### 3) 해결 방법
+- `getAllTags()` 함수를 수정하여 포스트의 태그와 프로젝트 컬렉션의 태그를 모두 포함하도록 변경
+
+**수정 전 코드**:
+```typescript
+// 모든 태그 목록 가져오기 (포스트에서 사용된 태그)
+export const getAllTags = async (): Promise<string[]> => {
+  const posts = await getPublishedPosts()
+  const tagSet = new Set<string>()
+  posts.forEach(post => {
+    if (post.tags) {
+      post.tags.forEach(tag => tagSet.add(tag))
+    }
+  })
+  return Array.from(tagSet).sort()
+}
+```
+
+**수정 후 코드**:
+```typescript
+// 모든 태그 목록 가져오기 (포스트에서 사용된 태그 + 프로젝트 컬렉션의 태그)
+export const getAllTags = async (): Promise<string[]> => {
+  const tagSet = new Set<string>()
+  
+  // 포스트에서 태그 가져오기
+  const posts = await getPublishedPosts()
+  posts.forEach(post => {
+    if (post.tags) {
+      post.tags.forEach(tag => tagSet.add(tag))
+    }
+  })
+  
+  // 프로젝트 컬렉션에서 태그 가져오기
+  const projects = await getAllProjects()
+  projects.forEach(project => {
+    if (project.tag) {
+      tagSet.add(project.tag)
+    }
+  })
+  
+  return Array.from(tagSet).sort()
+}
+```
+
+#### 4) 핵심 변경 사항
+1. **포스트 태그 추출**: 기존과 동일하게 공개된 포스트에서 태그 추출
+2. **프로젝트 태그 추가**: `getAllProjects()`를 호출하여 프로젝트 컬렉션의 모든 태그를 가져와서 추가
+3. **Set 사용**: 중복 태그를 자동으로 제거하여 효율적으로 관리
+
+#### 5) 결과
+- 프로젝트를 생성하면 해당 태그가 즉시 블로그 페이지에 표시됨
+- 포스트가 없어도 프로젝트 정보만으로 블로그 목록에 나타남
+- 어드민 페이지와 블로그 페이지의 태그 목록이 일치하게 됨
+
+#### 6) 주의사항
+- 프로젝트 컬렉션의 태그와 포스트의 태그가 정확히 일치해야 함 (대소문자, 공백 등)
+- 프로젝트를 삭제하면 해당 태그도 블로그 페이지에서 사라지지만, 포스트가 있으면 계속 표시됨
+
 ## 📝 라이선스
 
 이 프로젝트는 개인 포트폴리오 용도로 제작되었습니다.

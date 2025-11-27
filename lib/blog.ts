@@ -327,15 +327,26 @@ export const updateProject = async (id: string, description: string): Promise<vo
   })
 }
 
-// 모든 태그 목록 가져오기 (포스트에서 사용된 태그)
+// 모든 태그 목록 가져오기 (포스트에서 사용된 태그 + 프로젝트 컬렉션의 태그)
 export const getAllTags = async (): Promise<string[]> => {
-  const posts = await getPublishedPosts()
   const tagSet = new Set<string>()
+  
+  // 포스트에서 태그 가져오기
+  const posts = await getPublishedPosts()
   posts.forEach(post => {
     if (post.tags) {
       post.tags.forEach(tag => tagSet.add(tag))
     }
   })
+  
+  // 프로젝트 컬렉션에서 태그 가져오기
+  const projects = await getAllProjects()
+  projects.forEach(project => {
+    if (project.tag) {
+      tagSet.add(project.tag)
+    }
+  })
+  
   return Array.from(tagSet).sort()
 }
 
