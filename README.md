@@ -1138,6 +1138,52 @@ export const storage: FirebaseStorage = getStorage(app)
 - 프로덕션 환경에서도 중복 초기화 방지
 - 에러 없이 Firebase 서비스를 사용 가능
 
+### 10. Next.js 캐싱으로 인한 새 블로그 글이 반영되지 않는 문제
+
+**문제**: 새로운 블로그 글을 작성했는데 로컬 개발 서버(`npm run dev`)에서는 보이지만 배포된 사이트에서는 보이지 않습니다.
+
+**원인**:
+- Next.js 14 (App Router)는 기본적으로 페이지를 캐싱합니다
+- 배포 환경에서는 빌드 시점의 데이터가 캐시되어 표시될 수 있습니다
+- 로컬 개발 서버는 개발 모드로 실행되어 캐싱이 덜 적용되지만, 프로덕션 빌드는 성능 최적화를 위해 캐싱을 적극 활용합니다
+- Firebase에서 데이터를 가져오더라도, Next.js가 페이지 컴포넌트 자체를 캐시할 수 있습니다
+
+**해결 방법**:
+블로그 관련 페이지에 동적 렌더링 설정을 추가하여 항상 최신 데이터를 가져오도록 설정합니다.
+
+**적용 위치**:
+- `/app/blog/page.tsx` - 블로그 목록 페이지
+- `/app/blog/[tag]/page.tsx` - 태그별 페이지
+- `/app/blog/[tag]/[slug]/page.tsx` - 개별 포스트 페이지
+
+**구현 코드**:
+```typescript
+// 각 페이지 컴포넌트 상단에 추가
+export const dynamic = 'force-dynamic'  // 항상 동적 렌더링
+export const revalidate = 0            // 캐시 재검증 시간 0초 (즉시 무효화)
+
+export default async function BlogPage() {
+  // Firebase에서 최신 데이터 가져오기
+  const tags = await getAllTags()
+  const projects = await getAllProjects()
+  // ...
+}
+```
+
+**설명**:
+- `export const dynamic = 'force-dynamic'`: 페이지가 매 요청마다 새로 렌더링되도록 강제합니다
+- `export const revalidate = 0`: 캐시 재검증 시간을 0초로 설정하여 항상 최신 데이터를 가져옵니다
+
+**장점**:
+- 새로운 블로그 글이 즉시 반영됩니다 (재배포 불필요)
+- Firebase에서 항상 최신 데이터를 가져옵니다
+- 로컬과 배포 환경의 동작이 일치합니다
+
+**참고**:
+- Next.js App Router는 기본적으로 캐싱을 사용하여 성능을 최적화합니다
+- 동적 데이터가 자주 변경되는 경우(예: 블로그 글)에는 `force-dynamic` 설정이 필요합니다
+- 정적 콘텐츠가 많은 경우에는 기본 캐싱을 유지하는 것이 성능상 유리합니다
+
 ### 10. Firebase Timestamp와 Date 타입 변환 문제
 
 **문제**: Firebase Firestore에서 가져온 데이터의 `createdAt`과 `updatedAt` 필드가 `Timestamp` 타입인데, 이를 JavaScript `Date` 객체로 변환해야 하는 경우가 많습니다. 또한 클라이언트와 서버에서 타입이 다를 수 있습니다.

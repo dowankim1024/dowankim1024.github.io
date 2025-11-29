@@ -88,6 +88,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
+// 항상 동적으로 렌더링하여 최신 데이터를 가져오도록 설정
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function BlogPostPage({ params }: PageProps) {
   const decodedSlug = decodeURIComponent(params.slug)
   const decodedTag = decodeURIComponent(params.tag)

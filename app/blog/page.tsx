@@ -2,6 +2,10 @@ import Link from 'next/link'
 import { getAllTags, getAllProjects } from '@/lib/blog'
 import Header from '@/components/Home/Header/Header'
 
+// 항상 동적으로 렌더링하여 최신 데이터를 가져오도록 설정
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function BlogPage() {
   const tags = await getAllTags()
   const projects = await getAllProjects()
