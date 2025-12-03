@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPostsByTagPaginated } from '@/lib/blog'
 import { BlogPost } from '@/types/blog'
 import { QueryDocumentSnapshot } from 'firebase/firestore'
@@ -82,25 +83,43 @@ export default function PostList({ initialPosts, tag }: PostListProps) {
   return (
     <>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-8">
-        {posts.map((post) => (
-          <Link 
-            key={post.id} 
-            href={`/blog/${encodeURIComponent(tag)}/${encodeURIComponent(post.slug || post.id || '')}`}
-            className="bg-[#1b1e26] p-8 rounded-2xl border border-[rgba(3,232,249,0.2)] transition-all duration-300 no-underline text-inherit block hover:border-[#03e8f9] hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(3,232,249,0.2)]"
-          >
-            <h2 className="text-2xl mb-4 text-white">{post.title}</h2>
-            <p className="text-sm text-[#03e8f9] mb-4">
-              {(() => {
-                const date = post.createdAt instanceof Date 
-                  ? post.createdAt 
-                  : 'toDate' in post.createdAt 
-                    ? (post.createdAt as { toDate: () => Date }).toDate()
-                    : new Date(post.createdAt as string | number)
-                return date.toLocaleDateString('ko-KR')
-              })()}
-            </p>
-          </Link>
-        ))}
+        {posts.map((post) => {
+          const thumbnailImage = post.images && post.images.length > 0 
+            ? post.images[0] 
+            : '/images/blogs/default_thumbnail.jpg'
+          const date = post.createdAt instanceof Date 
+            ? post.createdAt 
+            : 'toDate' in post.createdAt 
+              ? (post.createdAt as { toDate: () => Date }).toDate()
+              : new Date(post.createdAt as string | number)
+          
+          return (
+            <Link 
+              key={post.id} 
+              href={`/blog/${encodeURIComponent(tag)}/${encodeURIComponent(post.slug || post.id || '')}`}
+              className="bg-[#1b1e26] rounded-2xl border border-[rgba(3,232,249,0.2)] transition-all duration-300 no-underline text-inherit block hover:border-[#03e8f9] hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(3,232,249,0.2)] overflow-hidden"
+            >
+              {/* 썸네일 이미지 */}
+              <div className="relative w-full h-48 bg-black">
+                <Image
+                  src={thumbnailImage}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
+              
+              {/* 제목과 날짜 */}
+              <div className="p-6">
+                <h2 className="text-xl mb-3 text-white line-clamp-2">{post.title}</h2>
+                <p className="text-sm text-[#03e8f9]">
+                  {date.toLocaleDateString('ko-KR')}
+                </p>
+              </div>
+            </Link>
+          )
+        })}
       </div>
       
       {/* 스크롤 감지용 요소 */}
