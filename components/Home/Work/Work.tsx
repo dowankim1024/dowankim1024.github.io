@@ -8,7 +8,7 @@ import FeaturedCarousel from './FeaturedCarousel'
 
 const featuredProjects = [
   {
-    href: 'https://dt.pusan.ac.kr/pages/DT_page/DT_016_page/#/about',
+    href: 'https://2025-pnu-design-technology-graduate.vercel.app',
     img: '/images/projects/Graduate.webp',
     title: '2025 PNU Design&Technology Graduate Website',
     description: 'Designer(SeEun Park), Developer(DoWan Kim)',
