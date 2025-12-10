@@ -31,7 +31,7 @@ export default function ArrowUp() {
   return (
     <aside>
       <Link
-        className="fixed bottom-12 right-12 z-[1000] text-5xl w-18 h-18 rounded-full text-center bg-[#050a13] shadow-[0_3px_10px_#03e8f9] transition-opacity duration-300 text-white flex items-center justify-center max-md:text-3xl max-md:w-12 max-md:h-12 max-md:bottom-6 max-md:right-6"
+        className="fixed bottom-12 right-12 z-[1000] text-5xl w-[72px] h-[72px] rounded-full text-center bg-[#050a13] shadow-[0_3px_10px_#03e8f9] transition-opacity duration-300 text-white flex items-center justify-center max-md:text-3xl max-md:w-12 max-md:h-12 max-md:bottom-6 max-md:right-6"
         href="#home"
         title="back to top"
         onClick={scrollToTop}
