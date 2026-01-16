@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getProjectByTag, getPostsByTagPaginated } from '@/lib/blog'
@@ -9,6 +10,27 @@ import PostList from './PostList'
 interface PageProps {
   params: {
     tag: string
+  }
+}
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dowankim.site'
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const decodedTag = decodeURIComponent(params.tag)
+  const canonicalUrl = `${siteUrl}/blog/${encodeURIComponent(decodedTag)}`
+
+  return {
+    title: decodedTag,
+    description: `${decodedTag} 프로젝트의 개발 과정과 블로그 글`,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: decodedTag,
+      description: `${decodedTag} 프로젝트의 개발 과정과 블로그 글`,
+      url: canonicalUrl,
+      siteName: 'Dowan Kim Portfolio',
+    },
   }
 }
 

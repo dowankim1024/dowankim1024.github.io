@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getProjectByTag, getPostsByTagPaginated } from '@/lib/blog'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -5,6 +6,21 @@ import Header from '@/components/Home/Header/Header'
 import PostList from '@/app/blog/[tag]/PostList'
 
 const DAILY_TAG = '일상'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dowankim.site'
+
+export const metadata: Metadata = {
+  title: 'Daily',
+  description: '분야에 상관없이 일상에서 배운 점을 기록합니다.',
+  alternates: {
+    canonical: `${siteUrl}/daily`,
+  },
+  openGraph: {
+    title: 'Daily',
+    description: '분야에 상관없이 일상에서 배운 점을 기록합니다.',
+    url: `${siteUrl}/daily`,
+    siteName: 'Dowan Kim Portfolio',
+  },
+}
 
 // 항상 동적으로 렌더링하여 최신 데이터를 가져오도록 설정
 export const dynamic = 'force-dynamic'

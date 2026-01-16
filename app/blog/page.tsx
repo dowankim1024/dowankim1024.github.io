@@ -1,6 +1,23 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllTags, getAllProjects } from '@/lib/blog'
 import Header from '@/components/Home/Header/Header'
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dowankim.site'
+
+export const metadata: Metadata = {
+  title: 'Projects',
+  description: '프로젝트별 개발 과정을 블로그 형식으로 정리하였습니다.',
+  alternates: {
+    canonical: `${siteUrl}/blog`,
+  },
+  openGraph: {
+    title: 'Projects',
+    description: '프로젝트별 개발 과정을 블로그 형식으로 정리하였습니다.',
+    url: `${siteUrl}/blog`,
+    siteName: 'Dowan Kim Portfolio',
+  },
+}
 
 // 항상 동적으로 렌더링하여 최신 데이터를 가져오도록 설정
 export const dynamic = 'force-dynamic'
