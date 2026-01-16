@@ -10,9 +10,12 @@ export default async function BlogPage() {
   const tags = await getAllTags()
   const projects = await getAllProjects()
   
+  // Daily 태그("일상") 제외
+  const filteredTags = tags.filter(tag => tag !== '일상')
+  
   // 프로젝트 정보가 있는 태그와 없는 태그를 구분
   const projectMap = new Map(projects.map(p => [p.tag, p]))
-  const projectTags = tags.map(tag => ({
+  const projectTags = filteredTags.map(tag => ({
     tag,
     project: projectMap.get(tag) || null,
   }))

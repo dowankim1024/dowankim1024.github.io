@@ -110,6 +110,9 @@ export default async function BlogPostPage({ params }: PageProps) {
   // 다음 포스트 (더 오래된 포스트, 인덱스가 큼)
   const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
 
+  // Daily 태그인지 확인
+  const isDaily = decodedTag === '일상'
+
   return (
     <>
       <Header />
@@ -117,20 +120,32 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="max-w-3xl mx-auto">
         {/* 네비게이션 버튼 */}
         <div className="mb-8 flex flex-col sm:flex-row gap-4">
-          <Link 
-            href="/blog"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(3,232,249,0.1)] border border-[rgba(3,232,249,0.2)] rounded-lg text-[#03e8f9] no-underline transition-all duration-300 hover:bg-[rgba(3,232,249,0.2)] hover:border-[#03e8f9] hover:-translate-y-0.5"
-          >
-            <span className="text-xl">←</span>
-            <span>프로젝트 목록으로</span>
-          </Link>
-          <Link 
-            href={`/blog/${encodeURIComponent(decodedTag)}`}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(3,232,249,0.1)] border border-[rgba(3,232,249,0.2)] rounded-lg text-[#03e8f9] no-underline transition-all duration-300 hover:bg-[rgba(3,232,249,0.2)] hover:border-[#03e8f9] hover:-translate-y-0.5"
-          >
-            <span className="text-xl">←</span>
-            <span>{decodedTag} 목록으로</span>
-          </Link>
+          {!isDaily && (
+            <Link 
+              href="/blog"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(3,232,249,0.1)] border border-[rgba(3,232,249,0.2)] rounded-lg text-[#03e8f9] no-underline transition-all duration-300 hover:bg-[rgba(3,232,249,0.2)] hover:border-[#03e8f9] hover:-translate-y-0.5"
+            >
+              <span className="text-xl">←</span>
+              <span>프로젝트 목록으로</span>
+            </Link>
+          )}
+          {isDaily ? (
+            <Link 
+              href="/daily"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(3,232,249,0.1)] border border-[rgba(3,232,249,0.2)] rounded-lg text-[#03e8f9] no-underline transition-all duration-300 hover:bg-[rgba(3,232,249,0.2)] hover:border-[#03e8f9] hover:-translate-y-0.5"
+            >
+              <span className="text-xl">←</span>
+              <span>Daily 목록으로</span>
+            </Link>
+          ) : (
+            <Link 
+              href={`/blog/${encodeURIComponent(decodedTag)}`}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(3,232,249,0.1)] border border-[rgba(3,232,249,0.2)] rounded-lg text-[#03e8f9] no-underline transition-all duration-300 hover:bg-[rgba(3,232,249,0.2)] hover:border-[#03e8f9] hover:-translate-y-0.5"
+            >
+              <span className="text-xl">←</span>
+              <span>{decodedTag} 목록으로</span>
+            </Link>
+          )}
         </div>
         
         <header className="mb-12 pb-8 border-b border-[rgba(3,232,249,0.2)]">
