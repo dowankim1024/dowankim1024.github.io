@@ -37,6 +37,49 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
   })) as BlogPost[]
 }
 
+// 전체 포스트 가져오기 (페이지네이션, 공개된 것만, 최신순)
+export const getPublishedPostsPaginated = async (
+  pageSize: number = 12,
+  lastDoc?: QueryDocumentSnapshot
+): Promise<{ posts: BlogPost[], lastDoc: QueryDocumentSnapshot | null, hasMore: boolean }> => {
+  let q = query(
+    collection(db, POSTS_COLLECTION),
+    where('published', '==', true),
+    orderBy('createdAt', 'desc'),
+    limit(pageSize + 1)
+  )
+
+  if (lastDoc) {
+    q = query(
+      collection(db, POSTS_COLLECTION),
+      where('published', '==', true),
+      orderBy('createdAt', 'desc'),
+      startAfter(lastDoc),
+      limit(pageSize + 1)
+    )
+  }
+
+  const snapshot = await getDocs(q)
+  const docs = snapshot.docs
+  const hasMore = docs.length > pageSize
+  const postsToReturn = hasMore ? docs.slice(0, pageSize) : docs
+
+  const posts = postsToReturn.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+    createdAt: doc.data().createdAt.toDate(),
+    updatedAt: doc.data().updatedAt.toDate(),
+  })) as BlogPost[]
+
+  const lastDocument = postsToReturn.length > 0 ? docs[postsToReturn.length - 1] : null
+
+  return {
+    posts,
+    lastDoc: lastDocument,
+    hasMore
+  }
+}
+
 // 모든 포스트 가져오기 (관리자용)
 export const getAllPosts = async (): Promise<BlogPost[]> => {
   try {
