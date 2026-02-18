@@ -17,6 +17,13 @@ export interface Category {
 export const projects: Project[] = [
   {
     type: 'front-end',
+    href: 'https://dowankim.site/blog/SIMVEX%3A%20%EA%B3%B5%ED%95%99%20%ED%95%99%EC%8A%B5%EC%9A%A9%20%EC%9B%B9%20%EA%B8%B0%EB%B0%98%203D%20%EA%B8%B0%EA%B3%84%20%EB%B6%80%ED%92%88%20%EB%B7%B0%EC%96%B4',
+    img: '/images/projects/SIMVEX.webp',
+    title: 'SIMVEX: 공학 학습용 웹 기반 3D 기계 부품 뷰어',
+    description: '제 4회 블레이버스 MVP 해커톤 대상',
+  },
+  {
+    type: 'front-end',
     href: 'https://dt.pusan.ac.kr/pages/DT_page/DT_016_page/#/about',
     img: '/images/projects/Graduate.webp',
     title: '2025 PNU Design&Technology Graduate Website',
@@ -38,7 +45,7 @@ export const projects: Project[] = [
   },
   {
     type: 'front-end',
-    href: 'http://egemoney.co.kr/',
+    href: 'https://dowankim.site/blog/%EC%9D%B4%EA%B2%8C%EB%A8%B8%EB%8B%88',
     img: '/images/projects/egemnoey.webp',
     title: 'Egemoney, Economics Quiz App',
     description: 'KaKaoTechCampus PNU 1 Team',

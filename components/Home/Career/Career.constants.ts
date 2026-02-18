@@ -59,9 +59,9 @@ export const education: Education[] = [
 
 export const awards: Award[] = [
   {
-    year: '2024',
-    title: 'ARTECH Future Mobility Capstone Design',
-    award: '장려상',
+    year: '2026',
+    title: '제 4회 Blaybus MVP 개발 해커톤',
+    award: '대상',
   },
   {
     year: '2025',
@@ -72,6 +72,11 @@ export const awards: Award[] = [
     year: '2025',
     title: 'PNU S/W 해커톤',
     award: '우수상',
+  },
+  {
+    year: '2024',
+    title: 'ARTECH Future Mobility Capstone Design',
+    award: '장려상',
   },
 ]
 
