@@ -1,5 +1,11 @@
 import Image from 'next/image'
+import { IBM_Plex_Sans_KR } from 'next/font/google'
 import { aboutDescriptions, majors, jobs } from './About.constants'
+
+const aboutDescriptionFont = IBM_Plex_Sans_KR({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+})
 
 export default function About() {
   return (
@@ -7,7 +13,7 @@ export default function About() {
       <div className="max-w-[1200px] mx-auto px-4">
         <h2 className="text-5xl mb-12">About me</h2>
         {aboutDescriptions.map((sentence) => (
-          <p key={sentence} className="text-2xl my-2 max-md:text-xl">
+          <p key={sentence} className={`${aboutDescriptionFont.className} text-2xl my-2 max-md:text-xl`}>
             {sentence}
           </p>
         ))}

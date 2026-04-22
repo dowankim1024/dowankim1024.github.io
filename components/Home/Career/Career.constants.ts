@@ -24,6 +24,11 @@ export interface Certification {
 
 export const experiences: Experience[] = [
   {
+    company: 'AI·SW 마에스트로 17기',
+    role: 'AI·SW 마에스트로 서울 17기',
+    period: '2026.04 ~',
+  },
+  {
     company: '(주)가이버스',
     role: '프론트엔드개발/기획/디자인',
     period: '2023.10 ~ 2024.06',
@@ -59,22 +64,22 @@ export const education: Education[] = [
 
 export const awards: Award[] = [
   {
-    year: '2026',
+    year: '2026.02',
     title: '제 4회 Blaybus MVP 개발 해커톤',
     award: '대상',
   },
   {
-    year: '2025',
+    year: '2025.08',
     title: '카카오테크캠퍼스 아이디어톤',
     award: '우수상',
   },
   {
-    year: '2025',
-    title: 'PNU S/W 해커톤',
+    year: '2025.05',
+    title: 'PNU S/W 해커톤(예선)',
     award: '우수상',
   },
   {
-    year: '2024',
+    year: '2024.09',
     title: 'ARTECH Future Mobility Capstone Design',
     award: '장려상',
   },

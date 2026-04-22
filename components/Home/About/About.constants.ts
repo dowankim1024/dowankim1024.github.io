@@ -46,6 +46,6 @@ export const jobs: Job[] = [
     logo: '/images/jobs/lsit.png',
     alt: 'lsit logo',
     name: 'LS Information Technology Co., Ltd. as front-end developer',
-    period: '2025.01 - 2025.03',
+    period: '2025.01 - 2025.02',
   },
 ]

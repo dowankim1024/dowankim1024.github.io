@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { Noto_Sans } from 'next/font/google'
+import { Noto_Sans_KR } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 
-const notoSans = Noto_Sans({
+const notoSans = Noto_Sans_KR({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   variable: '--font-noto-sans',
