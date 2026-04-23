@@ -1,4 +1,6 @@
 import Header from '@/components/Home/Header'
+import ScatterPhysicsZone from '@/components/Home/Scatter/ScatterPhysicsZone'
+import HomeAboutWaveSurface from '@/components/Home/HomeAboutWaveSurface'
 import Home from '@/components/Home/Home'
 import About from '@/components/Home/About'
 import Career from '@/components/Home/Career'
@@ -11,9 +13,13 @@ export default function PortfolioPage() {
     <>
       <Header />
       <main>
-        <Home />
-        <About />
-        <Career />
+        <ScatterPhysicsZone>
+          <HomeAboutWaveSurface>
+            <Home />
+            <About />
+          </HomeAboutWaveSurface>
+          <Career />
+        </ScatterPhysicsZone>
         <Work />
         <ArrowUp />
       </main>
