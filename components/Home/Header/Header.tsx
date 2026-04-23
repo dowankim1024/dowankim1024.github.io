@@ -44,7 +44,7 @@ export default function Header() {
       <div className="flex items-center gap-2">
         <Image
           className="w-9 h-9 object-cover object-top rounded-full border border-[#03e8f9]"
-          src="/images/projects/prof.jpeg"
+          src="/images/projects/prof.webp"
           alt="logo"
           width={36}
           height={36}
@@ -61,8 +61,10 @@ export default function Header() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={`block px-4 py-2 border-b border-transparent transition-all duration-[250ms] hover:border-[#03e8f9] ${
-                  isActive(item.href) ? 'border border-[#03e8f9] rounded' : ''
+                className={`block px-4 py-2 transition-all duration-[250ms] ${
+                  isActive(item.href)
+                    ? 'border border-[#03e8f9] rounded'
+                    : 'border-b border-transparent hover:border-[#03e8f9]'
                 }`}
               >
                 {item.label}
@@ -85,8 +87,10 @@ export default function Header() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`block px-4 py-2 border-b border-transparent transition-all duration-[250ms] hover:border-[#03e8f9] ${
-                    isActive(item.href) ? 'border border-[#03e8f9] rounded' : ''
+                  className={`block px-4 py-2 transition-all duration-[250ms] ${
+                    isActive(item.href)
+                      ? 'border border-[#03e8f9] rounded'
+                      : 'border-b border-transparent hover:border-[#03e8f9]'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >

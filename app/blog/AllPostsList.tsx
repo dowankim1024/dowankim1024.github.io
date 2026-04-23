@@ -80,7 +80,7 @@ export default function AllPostsList({ initialPosts }: AllPostsListProps) {
           const primaryTag = post.tags?.[0] || '기타'
           const thumbnailImage = post.images && post.images.length > 0
             ? post.images[0]
-            : '/images/blogs/default_thumbnail.jpg'
+            : '/images/blogs/default_thumbnail.webp'
           const date = post.createdAt instanceof Date
             ? post.createdAt
             : 'toDate' in post.createdAt

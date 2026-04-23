@@ -86,7 +86,7 @@ export default function PostList({ initialPosts, tag }: PostListProps) {
         {posts.map((post) => {
           const thumbnailImage = post.images && post.images.length > 0 
             ? post.images[0] 
-            : '/images/blogs/default_thumbnail.jpg'
+            : '/images/blogs/default_thumbnail.webp'
           const date = post.createdAt instanceof Date 
             ? post.createdAt 
             : 'toDate' in post.createdAt 

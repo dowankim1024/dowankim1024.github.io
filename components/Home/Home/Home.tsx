@@ -19,7 +19,7 @@ export default function Home() {
       <div className="max-w-[1200px] mx-auto flex flex-row items-center gap-24 justify-center max-md:flex-col max-md:items-center">
         <Image
           className="w-auto h-auto max-w-[400px] max-h-[500px] object-contain object-top rounded-2xl border-[3px] border-[#03e8f9] max-md:max-w-[300px] max-md:max-h-[375px]"
-          src="/images/projects/prof.jpeg"
+          src="/images/projects/prof.webp"
           alt="Dowan Kim's profile"
           width={400}
           height={500}

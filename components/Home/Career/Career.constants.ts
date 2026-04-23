@@ -26,7 +26,7 @@ export const experiences: Experience[] = [
   {
     company: 'AI·SW 마에스트로 17기',
     role: 'AI·SW 마에스트로 서울 17기',
-    period: '2026.04 ~',
+    period: '2026.04 ~ 2026.12',
   },
   {
     company: '(주)가이버스',

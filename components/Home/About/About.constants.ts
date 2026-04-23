@@ -31,19 +31,25 @@ export const majors: Major[] = [
 
 export const jobs: Job[] = [
   {
-    logo: '/images/jobs/pnu.png',
+    logo: '/images/jobs/pnu.webp',
     alt: 'pnu logo',
     name: 'PNU Design&Technology',
     period: '2020.03 - 2026.02',
   },
   {
-    logo: '/images/jobs/gy.png',
+    logo: '/images/jobs/swmaestro.webp',
+    alt: 'swmaestro logo',
+    name: 'AI·SW 마에스트로 서울 17기',
+    period: '2026.04 ~ 2026.12',
+  },
+  {
+    logo: '/images/jobs/gy.webp',
     alt: 'gyvers logo',
     name: 'Gyvers as Software Engineer, Designer',
     period: '2023.09 - 2024.06',
   },
   {
-    logo: '/images/jobs/lsit.png',
+    logo: '/images/jobs/LS.webp',
     alt: 'lsit logo',
     name: 'LS Information Technology Co., Ltd. as front-end developer',
     period: '2025.01 - 2025.02',
